@@ -1092,9 +1092,22 @@
     <div class="auth-err" id="auth-err"></div>
     <div id="login-form">
       <div class="auth-field"><label>E-posta</label><input type="email" id="login-email" placeholder="ornek@mail.com" /></div>
-      <div class="auth-field"><label>Şifre</label><input type="password" id="login-pass" placeholder="••••••••" /></div>
+      <div class="auth-field">
+        <label style="display:flex;justify-content:space-between;align-items:center">
+          Şifre
+          <a onclick="switchTab('forgot')" style="color:#a78bfa;cursor:pointer;font-size:12px;font-weight:600;text-decoration:none">Şifremi unuttum</a>
+        </label>
+        <input type="password" id="login-pass" placeholder="••••••••" />
+      </div>
       <button class="auth-submit" id="login-btn" onclick="doLogin()">Giriş Yap</button>
       <div class="auth-switch">Hesabın yok mu? <a onclick="switchTab('register')">Üye ol</a></div>
+    </div>
+    <div id="forgot-form" style="display:none">
+      <p style="font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.6">Kayıtlı e-posta adresini gir, şifre sıfırlama bağlantısı gönderelim.</p>
+      <div class="auth-field"><label>E-posta</label><input type="email" id="forgot-email" placeholder="ornek@mail.com" /></div>
+      <div class="auth-err" id="forgot-ok" style="background:rgba(37,211,102,0.1);border-color:rgba(37,211,102,0.25);color:#25d366;display:none"></div>
+      <button class="auth-submit" id="forgot-btn" onclick="doForgotPassword()">Sıfırlama Bağlantısı Gönder</button>
+      <div class="auth-switch"><a onclick="switchTab('login')">← Giriş yap</a></div>
     </div>
     <div id="register-form" style="display:none">
       <div class="auth-field"><label>E-posta</label><input type="email" id="reg-email" placeholder="ornek@mail.com" /></div>
@@ -1177,7 +1190,7 @@
 <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
   import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
   // ── BURAYA KENDİ FIREBASE CONFIG'İNİ YAZ ──
@@ -1249,6 +1262,29 @@
     }
   };
 
+  // ── Şifremi unuttum ──
+  window.doForgotPassword = async function() {
+    const email = document.getElementById('forgot-email').value.trim();
+    const btn   = document.getElementById('forgot-btn');
+    const okEl  = document.getElementById('forgot-ok');
+    const errEl = document.getElementById('auth-err');
+
+    if (!email) { showErr('E-posta adresinizi girin.'); return; }
+    btn.disabled = true; btn.textContent = 'Gönderiliyor…';
+    errEl.classList.remove('show'); okEl.style.display = 'none';
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      okEl.textContent = '✅ Sıfırlama bağlantısı gönderildi. E-postanı kontrol et.';
+      okEl.style.display = 'block';
+      document.getElementById('forgot-email').value = '';
+    } catch(e) {
+      showErr(firebaseErrMsg(e.code));
+    } finally {
+      btn.disabled = false; btn.textContent = 'Sıfırlama Bağlantısı Gönder';
+    }
+  };
+
   // ── Giriş ──
   window.doLogin = async function() {
     const email = document.getElementById('login-email').value.trim();
@@ -1292,6 +1328,24 @@
       const planLabels = { trial:'✓ Deneme (1 gün)', starter:'⭐ Starter', pro:'🚀 Pro', business:'💼 Business' };
       document.getElementById('dash-plan').textContent = planLabels[data.plan] || data.plan;
     }
+
+    // GitHub'dan en güncel installer linkini çek
+    fetch('https://api.github.com/repos/yekta72/sendigo-app/releases/latest')
+      .then(r => r.json())
+      .then(release => {
+        const asset = release.assets && release.assets.find(a => a.name && a.name.includes('Setup') && a.name.endsWith('.exe'));
+        const btn = document.getElementById('dash-dl-btn');
+        if (asset) {
+          btn.href = asset.browser_download_url;
+          btn.textContent = `⬇️ Sendigo'yu İndir (${release.tag_name})`;
+        } else {
+          btn.href = 'https://github.com/yekta72/sendigo-app/releases/latest';
+          btn.textContent = `⬇️ Sendigo'yu İndir (Windows)`;
+        }
+      })
+      .catch(() => {
+        document.getElementById('dash-dl-btn').href = 'https://github.com/yekta72/sendigo-app/releases/latest';
+      });
 
     document.getElementById('dash-overlay').classList.add('open');
   };
@@ -1380,9 +1434,16 @@
   window.switchTab = function(tab) {
     document.getElementById('login-form').style.display    = tab === 'login'    ? '' : 'none';
     document.getElementById('register-form').style.display = tab === 'register' ? '' : 'none';
+    document.getElementById('forgot-form').style.display   = tab === 'forgot'   ? '' : 'none';
     document.getElementById('tab-login').classList.toggle('active',    tab === 'login');
     document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+    // Şifremi unuttum ekranında tab bar'ı gizle
+    document.querySelector('.auth-tabs').style.display = tab === 'forgot' ? 'none' : '';
     document.getElementById('auth-err').classList.remove('show');
+    if (tab === 'forgot') {
+      const okEl = document.getElementById('forgot-ok');
+      if (okEl) okEl.style.display = 'none';
+    }
   };
   // ESC kapatır
   document.addEventListener('keydown', e => {
