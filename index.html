@@ -692,7 +692,7 @@
         <div class="mock-dot red"></div>
         <div class="mock-dot yellow"></div>
         <div class="mock-dot green"></div>
-        <span class="mock-titlebar-title">Sendigo v5.1.0</span>
+        <span class="mock-titlebar-title">Sendigo v5.2.0</span>
       </div>
 
       <!-- Sidebar -->
@@ -1309,13 +1309,9 @@
     document.getElementById('auth-err').classList.remove('show');
 
     try {
-      const cred = await signInWithEmailAndPassword(auth, email, pass);
+      await signInWithEmailAndPassword(auth, email, pass);
       closeAuth();
-      openDash();
-      // E-posta doğrulanmamışsa uyarı göster
-      if (!cred.user.emailVerified) {
-        showVerifyBanner(cred.user);
-      }
+      openDash(); // openDash içinde e-posta doğrulama kontrolü yapılır
     } catch(e) {
       showErr(firebaseErrMsg(e.code));
     } finally {
@@ -1333,6 +1329,19 @@
   window.openDash = async function() {
     const user = auth.currentUser;
     if (!user) { openAuth('login'); return; }
+
+    // Her açılışta e-posta doğrulama bilgisini yenile
+    await user.reload().catch(() => {});
+    const verified = auth.currentUser?.emailVerified ?? user.emailVerified;
+    const banner   = document.getElementById('verify-banner');
+    if (banner) {
+      if (!verified) {
+        banner.style.display = 'block';
+        window._unverifiedUser = auth.currentUser;
+      } else {
+        banner.style.display = 'none';
+      }
+    }
 
     document.getElementById('dash-name').textContent  = user.email.split('@')[0];
     document.getElementById('dash-email').textContent = user.email;
