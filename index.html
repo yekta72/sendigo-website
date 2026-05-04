@@ -745,7 +745,7 @@
         <div class="mock-dot red"></div>
         <div class="mock-dot yellow"></div>
         <div class="mock-dot green"></div>
-        <span class="mock-titlebar-title">Sendigo v5.3.0</span>
+        <span class="mock-titlebar-title">Sendigo v5.4.0</span>
       </div>
 
       <!-- Sidebar -->
@@ -1137,7 +1137,7 @@
           <div class="ab-icon">🔍</div>
           <div>
             <h4>Cihaz Parmak İzi Maskeleme</h4>
-            <p>Her hesap benzersiz ekran çözünürlüğü, donanım profili, tarayıcı kimliği ve Chrome 124 User-Agent ile çalışır. WhatsApp aynı makineden gelen farklı hesapları birbirinden ayırt edemez.</p>
+            <p>Her hesap benzersiz ekran çözünürlüğü, donanım profili, tarayıcı kimliği ve Chrome 120–125 User-Agent Rotasyonu ile çalışır. WhatsApp aynı makineden gelen farklı hesapları birbirinden ayırt edemez.</p>
           </div>
         </div>
         <div class="ab-item">
@@ -1175,6 +1175,27 @@
             <p>"WhatsApp'ta değil" oranını anlık takip eder; risk eşiğinde otomatik yavaşlatır. Her N kampanya mesajından sonra hesaplar aralarında gerçekçi konuşmalar yaparak ban riskini sürekli düşük tutar.</p>
           </div>
         </div>
+        <div class="ab-item">
+          <div class="ab-icon">🚫</div>
+          <div>
+            <h4>İlgilenmiyorum Tespiti</h4>
+            <p>"İlgilenmiyorum", "istemiyorum", "dur", "listeden çıkar" gibi 17 anahtar kelime otomatik taranır. Yanıt veren numara sessizce kara listeye alınır — kampanya kesintisiz devam eder.</p>
+          </div>
+        </div>
+        <div class="ab-item">
+          <div class="ab-icon">🔀</div>
+          <div>
+            <h4>User-Agent Rotasyonu</h4>
+            <p>Chrome 120–125 aralığında gerçekçi minor sürümler (7 farklı UA) hesap başına kalıcı olarak atanır. Aynı makinedeki hesaplar farklı tarayıcı örnekleri gibi görünür.</p>
+          </div>
+        </div>
+        <div class="ab-item">
+          <div class="ab-icon">🪜</div>
+          <div>
+            <h4>Kademeli Hesap Başlatma</h4>
+            <p>Hesaplar 60–180 saniyelik Gaussian-dağılımlı aralıklarla başlatılır (max 12 dk). Küme tespitine karşı hesap başlangıç örüntüleri maskelenir.</p>
+          </div>
+        </div>
       </div>
     </div>
     <div class="antiban-visual">
@@ -1187,6 +1208,9 @@
       <div class="ab-stat-row"><span class="ab-stat-label">Gaussian zamanlama</span><span class="ab-stat-val blue">Aktif</span></div>
       <div class="ab-stat-row"><span class="ab-stat-label">Status + Presence simülasyonu</span><span class="ab-stat-val blue">Çalışıyor</span></div>
       <div class="ab-stat-row"><span class="ab-stat-label">Kampanya içi ısınma</span><span class="ab-stat-val blue">Aktif</span></div>
+      <div class="ab-stat-row"><span class="ab-stat-label">İlgilenmiyorum opt-out tespiti</span><span class="ab-stat-val">Aktif</span></div>
+      <div class="ab-stat-row"><span class="ab-stat-label">User-Agent rotasyonu</span><span class="ab-stat-val blue">Aktif</span></div>
+      <div class="ab-stat-row"><span class="ab-stat-label">Kademeli hesap başlatma</span><span class="ab-stat-val blue">Aktif</span></div>
       <div class="ab-stat-row"><span class="ab-stat-label">Genel ban riski</span><span class="ab-stat-val purple">Minimum</span></div>
     </div>
   </div>
