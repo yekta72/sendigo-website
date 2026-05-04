@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sendigo — Çoklu WhatsApp Yönetim Platformu</title>
+  <meta name="description" content="Birden fazla WhatsApp hesabını tek ekrandan yönet. Kampanya, anti-ban koruması, proxy desteği, AI destekli mesajlaşma ve çok daha fazlası." />
+  <meta property="og:title" content="Sendigo — Çoklu WhatsApp Yönetim Platformu" />
+  <meta property="og:description" content="Ban yemeden toplu mesaj gönder. Gelişmiş anti-ban teknolojisi ile güvende kal." />
+  <meta property="og:url" content="https://sendigo.pro" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23100c24'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237c3aed'/%3E%3Cstop offset='1' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='18,22 82,50 18,78 30,50' fill='url(%23g)'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #080812;
+      --bg2:       #0d0d1f;
+      --bg3:       #12122a;
+      --border:    rgba(255,255,255,0.08);
+      --border2:   rgba(255,255,255,0.13);
+      --text:      #f0f0ff;
+      --muted:     #9090b0;
+      --dim:       #5a5a7a;
+      --accent:    #7c3aed;
+      --accent2:   #6366f1;
+      --cyan:      #06b6d4;
+      --green:     #25d366;
+      --grad:      linear-gradient(135deg, #7c3aed, #6366f1, #06b6d4);
+      --shadow:    0 24px 80px rgba(124,58,237,0.18);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 68px;
+      background: rgba(8,8,18,0.82);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
+      text-decoration: none;
+    }
+    .nav-logo img { width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0; }
+    .nav-logo .logo-name { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-logo .logo-dot  { color: var(--cyan); -webkit-text-fill-color: var(--cyan); }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 14px;
+      font-weight: 500; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--grad); color: #fff !important;
+      padding: 9px 22px; border-radius: 10px; font-weight: 600 !important;
+      transition: opacity .2s, transform .15s !important;
+      -webkit-text-fill-color: #fff !important;
+    }
+    .nav-cta:hover { opacity: .88; transform: translateY(-1px); }
+    .nav-auth-btn {
+      background: rgba(255,255,255,0.07); border: 1px solid var(--border2);
+      color: var(--text); padding: 8px 18px; border-radius: 10px;
+      font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
+      transition: background .15s, border-color .15s;
+    }
+    .nav-auth-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); }
+    .nav-user-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.3);
+      color: #a78bfa; padding: 7px 14px; border-radius: 10px;
+      font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+    }
+
+    /* ── AUTH MODAL ── */
+    .auth-overlay {
+      display: none; position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(12px);
+      align-items: center; justify-content: center;
+    }
+    .auth-overlay.open { display: flex; }
+    .auth-box {
+      background: var(--bg2); border: 1px solid var(--border2);
+      border-radius: 24px; padding: 40px; width: 100%; max-width: 420px;
+      position: relative; box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+    }
+    .auth-close {
+      position: absolute; top: 16px; right: 18px;
+      background: none; border: none; color: var(--muted);
+      font-size: 22px; cursor: pointer; line-height: 1;
+    }
+    .auth-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
+    .auth-logo img { width: 36px; height: 36px; border-radius: 10px; }
+    .auth-logo span { font-size: 20px; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .auth-tabs { display: flex; gap: 4px; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 4px; margin-bottom: 28px; }
+    .auth-tab {
+      flex: 1; text-align: center; padding: 9px; border-radius: 9px;
+      font-size: 14px; font-weight: 600; cursor: pointer; color: var(--muted);
+      transition: background .15s, color .15s;
+    }
+    .auth-tab.active { background: var(--bg3); color: var(--text); }
+    .auth-field { margin-bottom: 14px; }
+    .auth-field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+    .auth-field input {
+      width: 100%; background: var(--bg3); border: 1px solid var(--border2);
+      color: var(--text); padding: 11px 14px; border-radius: 10px;
+      font-size: 14px; font-family: inherit; outline: none;
+      transition: border-color .15s;
+    }
+    .auth-field input:focus { border-color: rgba(124,58,237,0.6); }
+    .auth-submit {
+      width: 100%; background: var(--grad); color: #fff;
+      border: none; border-radius: 12px; padding: 13px;
+      font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
+      margin-top: 6px; transition: opacity .15s, transform .15s;
+    }
+    .auth-submit:hover { opacity: .9; transform: translateY(-1px); }
+    .auth-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .auth-err {
+      background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.25);
+      color: #f87171; border-radius: 10px; padding: 10px 14px;
+      font-size: 13px; margin-bottom: 14px; display: none;
+    }
+    .auth-err.show { display: block; }
+    .auth-switch { text-align: center; margin-top: 16px; font-size: 13px; color: var(--muted); }
+    .auth-switch a { color: #a78bfa; cursor: pointer; text-decoration: none; font-weight: 600; }
+
+    /* ── DASHBOARD MODAL ── */
+    .dash-overlay {
+      display: none; position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(12px);
+      align-items: center; justify-content: center;
+    }
+    .dash-overlay.open { display: flex; }
+    .dash-box {
+      background: var(--bg2); border: 1px solid var(--border2);
+      border-radius: 24px; padding: 40px; width: 100%; max-width: 500px;
+      position: relative; box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+    }
+    .dash-header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+    .dash-avatar {
+      width: 48px; height: 48px; border-radius: 14px;
+      background: linear-gradient(135deg, #7c3aed, #06b6d4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 800; color: #fff;
+    }
+    .dash-header h2 { font-size: 18px; font-weight: 800; }
+    .dash-header p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    .dash-close {
+      position: absolute; top: 16px; right: 18px;
+      background: none; border: none; color: var(--muted);
+      font-size: 22px; cursor: pointer;
+    }
+    .dash-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px 22px; margin-bottom: 14px;
+    }
+    .dash-card-label { font-size: 11px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+    .license-box {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.2);
+      border-radius: 10px; padding: 10px 14px;
+    }
+    .license-key {
+      flex: 1; font-size: 16px; font-weight: 800; letter-spacing: 1.5px;
+      background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      font-family: monospace;
+    }
+    .license-copy {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font-size: 18px; padding: 2px;
+      transition: color .15s;
+    }
+    .license-copy:hover { color: #a78bfa; }
+    .dash-plan-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(37,211,102,0.12); border: 1px solid rgba(37,211,102,0.25);
+      color: var(--green); padding: 4px 12px; border-radius: 100px;
+      font-size: 12px; font-weight: 700;
+    }
+    .dash-dl-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; background: var(--grad); color: #fff;
+      border: none; border-radius: 12px; padding: 14px;
+      font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
+      text-decoration: none; transition: opacity .15s, transform .15s;
+      margin-top: 6px;
+    }
+    .dash-dl-btn:hover { opacity: .9; transform: translateY(-1px); }
+    .dash-logout {
+      display: block; text-align: center; margin-top: 16px;
+      color: var(--dim); font-size: 13px; cursor: pointer;
+      background: none; border: none; font-family: inherit; width: 100%;
+    }
+    .dash-logout:hover { color: var(--muted); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; text-align: center;
+      padding: 120px 5% 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute; width: 700px; height: 700px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(124,58,237,0.22) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%,-55%);
+      pointer-events: none;
+    }
+    .hero-glow2 {
+      position: absolute; width: 400px; height: 400px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 70%);
+      top: 30%; right: 10%; pointer-events: none;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.35);
+      color: #a78bfa; padding: 6px 16px; border-radius: 100px;
+      font-size: 13px; font-weight: 600; margin-bottom: 28px;
+    }
+    .badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #a78bfa; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 900; line-height: 1.08; letter-spacing: -2px;
+      max-width: 880px;
+    }
+    .grad-text { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p {
+      font-size: clamp(16px, 2vw, 20px); color: var(--muted);
+      max-width: 640px; margin: 24px auto 44px; line-height: 1.7;
+    }
+    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: var(--grad); color: #fff;
+      padding: 15px 34px; border-radius: 14px;
+      font-size: 16px; font-weight: 700; text-decoration: none;
+      box-shadow: 0 0 40px rgba(124,58,237,0.35);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(124,58,237,0.5); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border2);
+      color: var(--text); padding: 15px 30px; border-radius: 14px;
+      font-size: 16px; font-weight: 600; text-decoration: none;
+      transition: background .15s, border-color .15s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.22); }
+
+    .hero-stats {
+      display: flex; gap: 48px; justify-content: center; flex-wrap: wrap;
+      margin-top: 64px; padding-top: 48px;
+      border-top: 1px solid var(--border);
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 32px; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    /* ── SECTIONS ── */
+    section { padding: 100px 5%; }
+    .section-label {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--accent2); margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 46px); font-weight: 800;
+      letter-spacing: -1px; line-height: 1.15; max-width: 700px;
+    }
+    .section-sub {
+      color: var(--muted); font-size: 17px; max-width: 560px;
+      margin-top: 16px; line-height: 1.7;
+    }
+    .section-head { text-align: center; margin-bottom: 64px; }
+    .section-head .section-title,
+    .section-head .section-sub { margin-left: auto; margin-right: auto; }
+
+    /* ── APP PREVIEW ── */
+    #preview { background: var(--bg2); padding: 80px 5%; }
+    .preview-wrap { max-width: 1100px; margin: 0 auto; }
+    .preview-mockup {
+      background: #0a0a1a;
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 40px 120px rgba(124,58,237,0.25);
+      display: flex;
+      height: 520px;
+      position: relative;
+    }
+    .mock-titlebar {
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 32px; background: #060610;
+      display: flex; align-items: center; padding: 0 12px; gap: 6px;
+      border-bottom: 1px solid var(--border); z-index: 5;
+    }
+    .mock-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .mock-dot.red { background: #ff5f57; }
+    .mock-dot.yellow { background: #ffbd2e; }
+    .mock-dot.green { background: #28c940; }
+    .mock-titlebar-title {
+      margin-left: auto; margin-right: auto;
+      font-size: 11px; color: var(--dim); font-weight: 600;
+    }
+    /* Sidebar */
+    .mock-sidebar {
+      width: 220px; flex-shrink: 0;
+      background: #09091a;
+      border-right: 1px solid var(--border);
+      padding-top: 32px;
+      display: flex; flex-direction: column;
+    }
+    .mock-sb-header {
+      padding: 12px 12px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mock-sb-logo {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 800;
+    }
+    .mock-sb-logo img { width: 20px; height: 20px; border-radius: 5px; }
+    .mock-sb-logo-text { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .mock-sb-stats {
+      display: flex; gap: 8px; margin-top: 6px;
+      font-size: 10px; color: var(--muted);
+    }
+    .mock-sb-stats span { display: flex; align-items: center; gap: 2px; }
+    .mock-account {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 12px; cursor: pointer; transition: background .15s;
+      position: relative;
+    }
+    .mock-account:hover { background: rgba(255,255,255,0.04); }
+    .mock-account.active { background: rgba(124,58,237,0.12); border-left: 2px solid var(--accent); }
+    .mock-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; flex-shrink: 0;
+    }
+    .mock-acct-info { flex: 1; min-width: 0; }
+    .mock-acct-name { font-size: 11px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mock-acct-status { font-size: 9px; color: var(--muted); }
+    .mock-acct-badge {
+      font-size: 9px; font-weight: 700; padding: 1px 5px;
+      border-radius: 100px; background: rgba(37,211,102,0.15); color: var(--green);
+    }
+    .mock-sb-nav {
+      display: flex; gap: 4px; padding: 8px;
+      border-top: 1px solid var(--border); margin-top: auto;
+    }
+    .mock-nav-btn {
+      flex: 1; padding: 6px 4px; border-radius: 8px;
+      font-size: 9px; font-weight: 600; text-align: center;
+      background: rgba(255,255,255,0.04); color: var(--muted); cursor: pointer;
+    }
+    .mock-nav-btn.active { background: rgba(124,58,237,0.2); color: #a78bfa; }
+    /* Main panel */
+    .mock-main {
+      flex: 1; padding: 40px 20px 16px; display: flex; flex-direction: column; gap: 12px; overflow: hidden;
+    }
+    .mock-panel-title { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+    .mock-panel-sub { font-size: 10px; color: var(--muted); }
+    .mock-row { display: flex; gap: 12px; }
+    .mock-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 14px; flex: 1;
+    }
+    .mock-card-label { font-size: 9px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .mock-card-val { font-size: 20px; font-weight: 800; }
+    .mock-card-val.green { color: var(--green); }
+    .mock-card-val.purple { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .mock-progress-track { height: 4px; background: var(--border); border-radius: 100px; margin-top: 6px; overflow: hidden; }
+    .mock-progress-fill { height: 100%; border-radius: 100px; background: var(--grad); }
+    .mock-log {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 12px; flex: 1; padding: 10px 12px; overflow: hidden;
+    }
+    .mock-log-title { font-size: 9px; color: var(--muted); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+    .mock-log-line { font-size: 9px; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; gap: 6px; }
+    .mock-log-line:last-child { border-bottom: none; }
+    .mock-log-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; }
+    .mock-log-dot.sent { background: var(--green); }
+    .mock-log-dot.wait { background: var(--cyan); }
+    .mock-log-dot.warn { background: #f59e0b; }
+    .mock-log-text { color: var(--muted); }
+    .mock-btns { display: flex; gap: 8px; }
+    .mock-btn {
+      padding: 7px 14px; border-radius: 8px; font-size: 10px; font-weight: 700; cursor: pointer;
+    }
+    .mock-btn.primary { background: var(--grad); color: #fff; }
+    .mock-btn.secondary { background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--muted); }
+    .mock-status-row {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 9px; color: var(--muted);
+    }
+    .mock-status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+
+    /* ── FEATURES ── */
+    #features { background: var(--bg); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 20px;
+    }
+    .feat-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 20px; padding: 32px;
+      transition: border-color .2s, transform .2s;
+      text-align: center;
+    }
+    .feat-card:hover { border-color: rgba(124,58,237,0.4); transform: translateY(-3px); }
+    .feat-icon {
+      width: 56px; height: 56px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; margin: 0 auto 20px;
+      text-align: center; flex-shrink: 0;
+    }
+    .feat-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+    .feat-card p  { color: var(--muted); font-size: 14px; line-height: 1.65; }
+    .feat-tags { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+    .feat-tag {
+      font-size: 11px; font-weight: 600; padding: 2px 8px;
+      border-radius: 100px; background: rgba(99,102,241,0.12);
+      color: #818cf8; border: 1px solid rgba(99,102,241,0.2);
+    }
+
+    /* ── ANTİ-BAN ── */
+    #antiban { background: var(--bg2); }
+    .antiban-wrap {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: center; max-width: 1100px; margin: 0 auto;
+    }
+    .antiban-list { display: flex; flex-direction: column; gap: 14px; }
+    .ab-item {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 16px; padding: 18px 20px;
+      transition: border-color .2s;
+    }
+    .ab-item:hover { border-color: rgba(6,182,212,0.35); }
+    .ab-icon {
+      width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px;
+      background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.25);
+      display: flex; align-items: center; justify-content: center; font-size: 17px;
+    }
+    .ab-item h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .ab-item p  { font-size: 13px; color: var(--muted); line-height: 1.55; }
+    .antiban-visual {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 24px; padding: 32px; position: relative; overflow: hidden;
+    }
+    .antiban-visual::before {
+      content:''; position:absolute; inset:0;
+      background: radial-gradient(circle at 80% 20%, rgba(6,182,212,0.08) 0%, transparent 60%);
+    }
+    .shield-big { font-size: 56px; display: block; text-align: center; margin-bottom: 20px; }
+    .ab-stat-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 11px 0; border-bottom: 1px solid var(--border);
+    }
+    .ab-stat-row:last-child { border-bottom: none; }
+    .ab-stat-label { font-size: 13px; color: var(--muted); }
+    .ab-stat-val {
+      font-size: 11px; font-weight: 700;
+      color: #4ade80; background: rgba(74,222,128,0.1);
+      padding: 3px 10px; border-radius: 100px;
+    }
+    .ab-stat-val.blue   { color: var(--cyan); background: rgba(6,182,212,0.1); }
+    .ab-stat-val.purple { color: #a78bfa;    background: rgba(167,139,250,0.1); }
+    .ab-stat-val.red    { color: #f87171;    background: rgba(248,113,113,0.1); }
+
+    /* ── PRICING ── */
+    #pricing { background: var(--bg); }
+    .pricing-toggle {
+      display: flex; align-items: center; justify-content: center;
+      gap: 14px; margin-bottom: 52px;
+    }
+    .toggle-label { font-size: 15px; font-weight: 600; color: var(--muted); cursor: pointer; transition: color .2s; }
+    .toggle-label.active { color: var(--text); }
+    .toggle-switch {
+      width: 52px; height: 28px; background: var(--accent);
+      border-radius: 100px; cursor: pointer; position: relative;
+    }
+    .toggle-switch::after {
+      content:''; position:absolute; top:4px; left:4px;
+      width:20px; height:20px; border-radius:50%; background:white;
+      transition: transform .2s;
+    }
+    .toggle-switch.annual::after { transform: translateX(24px); }
+    .save-badge {
+      background: rgba(37,211,102,0.15); color: var(--green);
+      border: 1px solid rgba(37,211,102,0.3);
+      font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 100px;
+    }
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 20px; max-width: 1000px; margin: 0 auto;
+    }
+    .price-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 24px; padding: 36px 32px;
+      position: relative; transition: transform .2s, border-color .2s;
+    }
+    .price-card:hover { transform: translateY(-4px); }
+    .price-card.popular {
+      border-color: rgba(124,58,237,0.6);
+      background: linear-gradient(180deg, rgba(124,58,237,0.08) 0%, var(--bg3) 100%);
+    }
+    .popular-badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--grad); color: #fff;
+      font-size: 12px; font-weight: 700; padding: 4px 18px;
+      border-radius: 100px; white-space: nowrap;
+    }
+    .plan-name { font-size: 14px; font-weight: 700; color: var(--muted); letter-spacing: .5px; text-transform: uppercase; }
+    .plan-price { font-size: 46px; font-weight: 900; margin: 16px 0 4px; letter-spacing: -2px; line-height: 1; }
+    .plan-price span { font-size: 20px; font-weight: 600; color: var(--muted); }
+    .plan-period { font-size: 13px; color: var(--dim); margin-bottom: 24px; }
+    .plan-divider { height: 1px; background: var(--border); margin-bottom: 24px; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+    .plan-features li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--muted); }
+    .plan-features li::before { content:'✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+    .plan-features li.cross { color: var(--dim); }
+    .plan-features li.cross::before { content:'✕'; color: var(--dim); }
+    .btn-plan {
+      display: block; width: 100%; text-align: center;
+      padding: 13px; border-radius: 12px;
+      font-size: 15px; font-weight: 700; text-decoration: none;
+      transition: transform .15s, opacity .15s;
+    }
+    .btn-plan:hover { transform: translateY(-1px); opacity: .88; }
+    .btn-plan.primary { background: var(--grad); color: #fff; }
+    .btn-plan.outline { background: transparent; border: 1.5px solid var(--border2); color: var(--text); }
+    .btn-plan.outline:hover { border-color: rgba(255,255,255,0.3); }
+
+    /* ── CTA BANNER ── */
+    #cta {
+      background: var(--bg2);
+      text-align: center;
+      padding: 80px 5%;
+    }
+    .cta-inner {
+      max-width: 700px; margin: 0 auto;
+      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(6,182,212,0.08));
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: 28px; padding: 60px 40px;
+      position: relative; overflow: hidden;
+    }
+    .cta-inner::before {
+      content:''; position:absolute; inset:0;
+      background: radial-gradient(circle at 50% 0%, rgba(124,58,237,0.12) 0%, transparent 60%);
+    }
+    .cta-inner h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 900; margin-bottom: 16px; position: relative; }
+    .cta-inner p { color: var(--muted); font-size: 17px; margin-bottom: 32px; position: relative; }
+    .cta-inner .btn-primary { position: relative; font-size: 18px; padding: 18px 44px; }
+    .cta-note { font-size: 13px; color: var(--dim); margin-top: 16px; position: relative; }
+
+    /* ── SSS ── */
+    #sss { background: var(--bg); }
+    .faq-wrap { max-width: 720px; margin: 0 auto; }
+    .faq-item { border: 1px solid var(--border); border-radius: 16px; margin-bottom: 12px; overflow: hidden; }
+    .faq-q {
+      width: 100%; background: none; border: none; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 24px; color: var(--text); font-size: 15px; font-weight: 600;
+      text-align: left; gap: 16px; font-family: inherit;
+    }
+    .faq-q:hover { background: rgba(255,255,255,0.03); }
+    .faq-arrow { font-size: 22px; color: var(--muted); transition: transform .25s; flex-shrink: 0; }
+    .faq-item.open .faq-arrow { transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height .3s ease, padding .3s;
+      font-size: 14px; color: var(--muted); line-height: 1.7;
+    }
+    .faq-item.open .faq-a { max-height: 300px; padding: 0 24px 20px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg2); border-top: 1px solid var(--border);
+      padding: 60px 5% 36px;
+    }
+    .footer-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      flex-wrap: wrap; gap: 40px; margin-bottom: 48px;
+    }
+    .footer-brand p { color: var(--muted); font-size: 14px; max-width: 260px; margin-top: 10px; line-height: 1.6; }
+    .footer-links h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--dim); margin-bottom: 16px; }
+    .footer-links a { display: block; color: var(--muted); text-decoration: none; font-size: 14px; margin-bottom: 10px; transition: color .15s; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+      padding-top: 28px; border-top: 1px solid var(--border);
+      font-size: 13px; color: var(--dim);
+    }
+    .footer-bottom a { color: var(--dim); text-decoration: none; }
+    .footer-bottom a:hover { color: var(--muted); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .antiban-wrap { grid-template-columns: 1fr; }
+      .antiban-visual { display: none; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 420px; }
+      .nav-links { display: none; }
+      .preview-mockup { height: 340px; }
+      .mock-sidebar { width: 160px; }
+    }
+    @media (max-width: 600px) {
+      section { padding: 70px 5%; }
+      .hero { padding: 100px 5% 60px; }
+      .hero-stats { gap: 28px; }
+      .preview-mockup { flex-direction: column; height: auto; }
+      .mock-sidebar { width: 100%; height: 120px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="icon-preview.png" alt="Sendigo Logo" style="width:32px;height:32px;border-radius:8px;flex-shrink:0" />
+    <span class="logo-name">Sendigo</span><span class="logo-dot">.pro</span>
+  </a>
+  <div class="nav-links">
+    <a href="#preview">Önizleme</a>
+    <a href="#features">Özellikler</a>
+    <a href="#antiban">Anti-Ban</a>
+    <a href="#pricing">Fiyatlar</a>
+    <a href="#sss">SSS</a>
+    <a href="#pricing" class="nav-cta">Hemen Başla</a>
+    <button class="nav-auth-btn" id="nav-login-btn" onclick="openAuth('login')">Giriş Yap</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="badge">
+    <span class="badge-dot"></span>
+    Ban olmadan toplu mesaj göndermenin yolu
+  </div>
+
+  <h1>Tüm WhatsApp Hesaplarını<br/><span class="grad-text">Tek Ekrandan Yönet</span></h1>
+
+  <p>WhatsApp Business ve kişisel hesaplarını aynı anda yönet. Kampanya gönder, hesapları güçlendir, AI ile mesaj yaz, proxy ile gizlen — gelişmiş anti-ban teknolojisiyle güvende kal.</p>
+
+  <div class="hero-btns">
+    <a href="#pricing" class="btn-primary">🚀 Ücretsiz Dene</a>
+    <a href="#preview" class="btn-secondary">✦ Uygulamayı Gör</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">10+</div><div class="stat-label">Aynı anda hesap</div></div>
+    <div class="stat"><div class="stat-num">%99</div><div class="stat-label">Tespit engellenme</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Kod bilgisi gerekli</div></div>
+    <div class="stat"><div class="stat-num">7/24</div><div class="stat-label">Otomasyon</div></div>
+  </div>
+</section>
+
+<!-- APP PREVIEW -->
+<section id="preview">
+  <div class="preview-wrap">
+    <div class="section-head" style="margin-bottom:40px">
+      <span class="section-label">Uygulama Önizlemesi</span>
+      <h2 class="section-title">Güçlü, sade ve hızlı</h2>
+      <p class="section-sub">Karanlık tema, anlık durum göstergeleri ve sezgisel arayüzle tüm hesaplarını kontrol altında tut.</p>
+    </div>
+
+    <div class="preview-mockup">
+      <!-- Title bar -->
+      <div class="mock-titlebar">
+        <div class="mock-dot red"></div>
+        <div class="mock-dot yellow"></div>
+        <div class="mock-dot green"></div>
+        <span class="mock-titlebar-title">Sendigo v5.1.0</span>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="mock-sidebar">
+        <div class="mock-sb-header">
+          <div class="mock-sb-logo">
+            <img src="icon-preview.png" alt="logo" style="width:20px;height:20px;border-radius:5px" />
+            <span class="mock-sb-logo-text">Sendigo</span>
+          </div>
+          <div class="mock-sb-stats">
+            <span>👥 4 Hesap</span>
+            <span>📤 247 Bugün</span>
+          </div>
+        </div>
+        <!-- Accounts -->
+        <div class="mock-account active">
+          <div class="mock-avatar" style="background:rgba(124,58,237,0.25);color:#a78bfa;">S</div>
+          <div class="mock-acct-info">
+            <div class="mock-acct-name">Satış Hesabı</div>
+            <div class="mock-acct-status">⚡ Kampanya aktif</div>
+          </div>
+          <div class="mock-acct-badge">87</div>
+        </div>
+        <div class="mock-account">
+          <div class="mock-avatar" style="background:rgba(6,182,212,0.2);color:#06b6d4;">M</div>
+          <div class="mock-acct-info">
+            <div class="mock-acct-name">Müşteri Hizm.</div>
+            <div class="mock-acct-status">🔥 Güçlendirme</div>
+          </div>
+          <div class="mock-acct-badge" style="background:rgba(6,182,212,0.15);color:#06b6d4;">12</div>
+        </div>
+        <div class="mock-account">
+          <div class="mock-avatar" style="background:rgba(37,211,102,0.15);color:#25d366;">D</div>
+          <div class="mock-acct-info">
+            <div class="mock-acct-name">Destek Hattı</div>
+            <div class="mock-acct-status">✅ Hazır</div>
+          </div>
+          <div class="mock-acct-badge" style="background:rgba(37,211,102,0.1);color:#25d366;">54</div>
+        </div>
+        <div class="mock-account">
+          <div class="mock-avatar" style="background:rgba(251,191,36,0.15);color:#fbbf24;">P</div>
+          <div class="mock-acct-info">
+            <div class="mock-acct-name">Pazarlama</div>
+            <div class="mock-acct-status">👋 Selam modu</div>
+          </div>
+          <div class="mock-acct-badge" style="background:rgba(251,191,36,0.1);color:#fbbf24;">94</div>
+        </div>
+
+        <div class="mock-sb-nav">
+          <div class="mock-nav-btn active">📋 Kampanya</div>
+          <div class="mock-nav-btn">💪 Güçlen.</div>
+          <div class="mock-nav-btn">👋 Selam</div>
+        </div>
+      </div>
+
+      <!-- Main panel -->
+      <div class="mock-main">
+        <div>
+          <div class="mock-panel-title">📋 Kampanya Yöneticisi</div>
+          <div class="mock-panel-sub">Satış Hesabı — Aktif kampanya</div>
+        </div>
+
+        <div class="mock-row">
+          <div class="mock-card">
+            <div class="mock-card-label">Gönderilen</div>
+            <div class="mock-card-val green">87 / 200</div>
+            <div class="mock-progress-track"><div class="mock-progress-fill" style="width:43%"></div></div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-label">Dönüşüm</div>
+            <div class="mock-card-val purple">%23</div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-label">Kalan</div>
+            <div class="mock-card-val" style="color:#a78bfa;">113</div>
+          </div>
+        </div>
+
+        <div class="mock-log">
+          <div class="mock-log-title">Aktivite Logu</div>
+          <div class="mock-log-line">
+            <div class="mock-log-dot sent"></div>
+            <span class="mock-log-text">✅ [Şablon A] → +90 532 *** *291 gönderildi</span>
+          </div>
+          <div class="mock-log-line">
+            <div class="mock-log-dot sent"></div>
+            <span class="mock-log-text">✅ [Şablon B] → +90 542 *** *774 gönderildi</span>
+          </div>
+          <div class="mock-log-line">
+            <div class="mock-log-dot wait"></div>
+            <span class="mock-log-text">⏳ Bekleniyor (insan hızı simülasyonu)…</span>
+          </div>
+          <div class="mock-log-line">
+            <div class="mock-log-dot sent"></div>
+            <span class="mock-log-text">✅ [Şablon A] → +90 505 *** *033 gönderildi</span>
+          </div>
+          <div class="mock-log-line">
+            <div class="mock-log-dot warn"></div>
+            <span class="mock-log-text">👋 +90 533 *** *819 zaten konuşulmuş, atlandı</span>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div class="mock-status-row">
+            <div class="mock-status-dot"></div>
+            <span>Kampanya çalışıyor — Anti-ban koruması aktif</span>
+          </div>
+          <div class="mock-btns">
+            <div class="mock-btn secondary">⏸ Duraklat</div>
+            <div class="mock-btn secondary">🛑 Güvenli Durdur</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-head">
+    <span class="section-label">Özellikler</span>
+    <h2 class="section-title">Her şey tek bir uygulamada</h2>
+    <p class="section-sub">WhatsApp pazarlama için ihtiyacın olan her araç, sezgisel bir arayüzde.</p>
+  </div>
+  <div class="features-grid">
+
+    <div class="feat-card">
+      <div class="feat-icon" style="background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3)">📋</div>
+      <h3>Kampanya Yöneticisi</h3>
+      <p>Excel veya CSV'den numara yükle, şablonlarını hazırla, başlat. Günlük limit, bekleme süreleri ve akıllı öncelik sırasıyla tam kontrol.</p>
+      <div class="feat-tags"><span class="feat-tag">Excel/CSV</span><span class="feat-tag">Şablon</span><span class="feat-tag">Günlük Limit</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon" style="background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3)">💪</div>
+      <h3>Hesap Güçlendirme</h3>
+      <p>Yeni hesapları devreye almadan önce ısıt. Hesaplar birbirleriyle gerçekçi çok turlu konuşmalar yaparak WhatsApp'ın güven eşiğini organik şekilde aşar. Kaç dakika çalışacağını sen seç.</p>
+      <div class="feat-tags"><span class="feat-tag">Warm-up</span><span class="feat-tag">Çok Turlu</span><span class="feat-tag">Zamanlı</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon" style="background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3)">🌐</div>
+      <h3>Proxy Desteği</h3>
+      <p>Her hesaba ayrı proxy ata. HTTP ve SOCKS5 formatlarını destekler. Otomatik rotasyon ile IP tespitini engelle. Farklı şehir veya ülkelerden bağlantı kur.</p>
+      <div class="feat-tags"><span class="feat-tag">HTTP</span><span class="feat-tag">SOCKS5</span><span class="feat-tag">Oto Rotasyon</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon" style="background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3)">👋</div>
+      <h3>Selam Modu</h3>
+      <p>Şablondan önce otomatik selamlama gönder. Cevap veren kişilere şablon ilet, vermeyenleri atla. Yemleme mesajlarıyla yanıt oranını maksimize et.</p>
+      <div class="feat-tags"><span class="feat-tag">Önce Selam</span><span class="feat-tag">Yemleme</span><span class="feat-tag">Oto Takip</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3)">🤖</div>
+      <h3>AI Destekli Mesajlaşma</h3>
+      <p>OpenAI ve Claude entegrasyonu ile mesajlarını AI'ya yaz. Yemleme mesajları, satış şablonları ve kişiselleştirilmiş içerik üret — saniyeler içinde onlarca varyasyon.</p>
+      <div class="feat-tags"><span class="feat-tag">OpenAI</span><span class="feat-tag">Claude AI</span><span class="feat-tag">Şablon Üretimi</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon" style="background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.25)">⌨️</div>
+      <h3>Akıllı Yazma Hızı</h3>
+      <p>5 farklı yazma hızı profili: çok yavaş'tan çok hızlı'ya. Her hesap için özelleştirilebilir. Karakter başına gerçekçi gecikme ile insan davranışını mükemmel taklit eder.</p>
+      <div class="feat-tags"><span class="feat-tag">5 Profil</span><span class="feat-tag">İnsan Simülasyonu</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon" style="background:rgba(37,211,102,0.12);border:1px solid rgba(37,211,102,0.25)">📊</div>
+      <h3>Detaylı İstatistikler</h3>
+      <p>Gönderilen mesajlar, dönüş yapan müşteri sayısı, hesap sağlığı, günlük grafik ve kampanya raporlarına tek ekrandan eriş. Neyin işe yaradığını gör.</p>
+      <div class="feat-tags"><span class="feat-tag">Raporlar</span><span class="feat-tag">Dönüşüm</span><span class="feat-tag">Sağlık Skoru</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.25)">⏰</div>
+      <h3>Zamanlı Başlatma</h3>
+      <p>Kampanya veya güçlendirmeyi istediğin saatte otomatik başlat. Sabah zirve saatlerinde gönderim yap, mesai dışında çalıştır — sen uyurken Sendigo çalışır.</p>
+      <div class="feat-tags"><span class="feat-tag">Otomatik</span><span class="feat-tag">Saat Ayarı</span><span class="feat-tag">Zirve Saat</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25)">🚫</div>
+      <h3>Kara Liste & Tekrar Mesaj Koruması</h3>
+      <p>Aynı kişiye iki kez mesaj atmayı engelle. Kara listeye alınan numaralar tüm kampanyalardan otomatik çıkarılır. İtibar ve güven koruması.</p>
+      <div class="feat-tags"><span class="feat-tag">Kara Liste</span><span class="feat-tag">Tekrar Önleme</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ANTİ-BAN -->
+<section id="antiban">
+  <div class="antiban-wrap">
+    <div>
+      <span class="section-label">Anti-Ban Teknolojisi</span>
+      <h2 class="section-title">Ban yemezsin. <span class="grad-text">Garanti.</span></h2>
+      <p class="section-sub" style="margin-bottom:36px">Sendigo, WhatsApp'ın bot tespit sistemini 7 farklı katmanda geçen özel bir güvenlik motoru üzerine inşa edilmiştir.</p>
+      <div class="antiban-list">
+        <div class="ab-item">
+          <div class="ab-icon">🔍</div>
+          <div>
+            <h4>Cihaz Parmak İzi Maskeleme</h4>
+            <p>Her hesap benzersiz ekran çözünürlüğü, donanım profili, tarayıcı kimliği ve User-Agent ile çalışır. WhatsApp aynı makineden gelen farklı hesapları birbirinden ayırt edemez.</p>
+          </div>
+        </div>
+        <div class="ab-item">
+          <div class="ab-icon">⏱️</div>
+          <div>
+            <h4>İnsan Benzeri Zamanlama</h4>
+            <p>Mesajlar arasında lognormal dağılımlı bekleme süreleri uygulanır. Sabah zirve saatlerine göre optimize edilmiş günlük sınırlar; gerçek bir insan gibi davranır.</p>
+          </div>
+        </div>
+        <div class="ab-item">
+          <div class="ab-icon">🎭</div>
+          <div>
+            <h4>Sahte Presence Döngüsü</h4>
+            <p>Hesaplar arka planda sohbet okur, kaydırır, fare hareketi simüle eder. WhatsApp gözünde %100 aktif ve gerçek bir kullanıcı görünür.</p>
+          </div>
+        </div>
+        <div class="ab-item">
+          <div class="ab-icon">🌐</div>
+          <div>
+            <h4>WebRTC IP Sızıntısı Engelleme</h4>
+            <p>Proxy kullanırken bile WebRTC üzerinden gerçek IP'nin ifşa olmasını engeller. Her hesabın ağ kimliği tamamen izole edilir.</p>
+          </div>
+        </div>
+        <div class="ab-item">
+          <div class="ab-icon">🔄</div>
+          <div>
+            <h4>Iç Isınma (Warm-up)</h4>
+            <p>Kampanya aralarında hesaplar kendi aralarında gerçekçi çok turlu konuşmalar yaparak ban riskini sürekli düşük tutar.</p>
+          </div>
+        </div>
+        <div class="ab-item">
+          <div class="ab-icon">⚡</div>
+          <div>
+            <h4>Erken Ban Uyarı Sistemi</h4>
+            <p>Hesabın "WhatsApp'ta değil" oranını anlık takip eder. Risk eşiğine yaklaşıldığında kampanyayı otomatik yavaşlatır ve seni uyarır.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="antiban-visual">
+      <span class="shield-big">🛡️</span>
+      <div class="ab-stat-row"><span class="ab-stat-label">Cihaz parmak izi tespiti</span><span class="ab-stat-val">Engellendi</span></div>
+      <div class="ab-stat-row"><span class="ab-stat-label">Bot davranışı tespiti</span><span class="ab-stat-val">Engellendi</span></div>
+      <div class="ab-stat-row"><span class="ab-stat-label">WebRTC IP sızıntısı</span><span class="ab-stat-val">Engellendi</span></div>
+      <div class="ab-stat-row"><span class="ab-stat-label">Hesaplar arası bağlantı tespiti</span><span class="ab-stat-val">Engellendi</span></div>
+      <div class="ab-stat-row"><span class="ab-stat-label">Fingerprint tutarlılığı</span><span class="ab-stat-val blue">Aktif</span></div>
+      <div class="ab-stat-row"><span class="ab-stat-label">Presence simülasyonu</span><span class="ab-stat-val blue">Çalışıyor</span></div>
+      <div class="ab-stat-row"><span class="ab-stat-label">Warm-up döngüsü</span><span class="ab-stat-val blue">Aktif</span></div>
+      <div class="ab-stat-row"><span class="ab-stat-label">Genel ban riski</span><span class="ab-stat-val purple">Çok Düşük</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-head">
+    <span class="section-label">Fiyatlandırma</span>
+    <h2 class="section-title">İşine uygun paketi seç</h2>
+    <p class="section-sub">Tüm paketlerde 1 günlük ücretsiz deneme. Kredi kartı gerekmez.</p>
+  </div>
+
+  <div class="pricing-toggle">
+    <span class="toggle-label active" id="weekly-label" onclick="setBilling('weekly')">Haftalık</span>
+    <div class="toggle-switch" id="billing-toggle" onclick="toggleBilling()"></div>
+    <span class="toggle-label" id="monthly-label" onclick="setBilling('monthly')">Aylık &nbsp;<span class="save-badge">%50 Tasarruf</span></span>
+  </div>
+
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price" id="price-starter">₺190<span>/hafta</span></div>
+      <div class="plan-period" id="period-starter">haftalık faturalandırma</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li>3 WhatsApp hesabı</li>
+        <li>Kampanya yöneticisi</li>
+        <li>Şablon editörü</li>
+        <li>Temel istatistikler</li>
+        <li>Proxy desteği</li>
+        <li>Kara liste & tekrar koruması</li>
+        <li class="cross">Hesap güçlendirme</li>
+        <li class="cross">Selam & Yemleme modu</li>
+        <li class="cross">AI şablon üretimi</li>
+        <li class="cross">Öncelikli destek</li>
+      </ul>
+      <a href="https://sendigopro.lemonsqueezy.com/checkout/buy/3f58c55c-403d-4071-b7a9-027fd84462d4" class="btn-plan outline lemonsqueezy-button" id="btn-starter">Başla</a>
+    </div>
+
+    <div class="price-card popular">
+      <div class="popular-badge">⭐ En Popüler</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price" id="price-pro">₺290<span>/hafta</span></div>
+      <div class="plan-period" id="period-pro">haftalık faturalandırma</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li>10 WhatsApp hesabı</li>
+        <li>Kampanya yöneticisi</li>
+        <li>Şablon editörü</li>
+        <li>Detaylı istatistikler & raporlar</li>
+        <li>Proxy desteği + otomatik rotasyon</li>
+        <li>Hesap güçlendirme</li>
+        <li class="cross">Selam & Yemleme modu</li>
+        <li class="cross">AI şablon üretimi (OpenAI/Claude)</li>
+        <li class="cross">Zamanlı başlatma</li>
+        <li class="cross">Öncelikli destek</li>
+      </ul>
+      <a href="https://sendigopro.lemonsqueezy.com/checkout/buy/833758e2-74ea-4ab5-860e-efc3b6838bfd" class="btn-plan primary lemonsqueezy-button" id="btn-pro">Hemen Başla</a>
+    </div>
+
+    <div class="price-card">
+      <div class="plan-name">Business</div>
+      <div class="plan-price" id="price-business">₺490<span>/hafta</span></div>
+      <div class="plan-period" id="period-business">haftalık faturalandırma</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li>Sınırsız WhatsApp hesabı</li>
+        <li>Kampanya yöneticisi</li>
+        <li>Şablon editörü</li>
+        <li>Detaylı istatistikler & raporlar</li>
+        <li>Proxy desteği + otomatik rotasyon</li>
+        <li>Hesap güçlendirme</li>
+        <li>Selam & Yemleme modu</li>
+        <li>AI şablon üretimi (OpenAI/Claude)</li>
+        <li>Zamanlı başlatma</li>
+        <li>Öncelikli WhatsApp desteği</li>
+      </ul>
+      <a href="https://sendigopro.lemonsqueezy.com/checkout/buy/4bf6f7b2-0ff9-4e33-8616-de15c0f0d2e6" class="btn-plan outline lemonsqueezy-button" id="btn-business">Başla</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section id="cta">
+  <div class="cta-inner">
+    <h2>Rakiplerinizden <span class="grad-text">önce başla</span></h2>
+    <p>Her gün beklediğin gün, rakibin yeni bir müşteri kazanıyor. Sendigo ile WhatsApp pazarlamanda kontrolü geri al — kurulum 5 dakika.</p>
+    <a href="#pricing" class="btn-primary">🚀 Şimdi Ücretsiz Dene</a>
+    <p class="cta-note">Kredi kartı gerekmez · 1 gün ücretsiz · İstediğin zaman iptal et</p>
+  </div>
+</section>
+
+<!-- SSS -->
+<section id="sss">
+  <div class="section-head">
+    <span class="section-label">SSS</span>
+    <h2 class="section-title">Sık sorulan sorular</h2>
+  </div>
+  <div class="faq-wrap">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Sendigo kullanmak hesabımı banlattırır mı?<span class="faq-arrow">+</span></button>
+      <div class="faq-a">Sendigo, özellikle ban önleme üzerine tasarlanmıştır. 7 katmanlı güvenlik sistemi — cihaz parmak izi maskeleme, insan benzeri zamanlama, presence simülasyonu, WebRTC koruması ve erken uyarı sistemi — sayesinde WhatsApp'ın bot tespit mekanizmalarını geçer. Önerilen günlük limitlere uyulduğunda ban riski son derece düşüktür.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">WhatsApp Business olmayan normal hesaplar da çalışır mı?<span class="faq-arrow">+</span></button>
+      <div class="faq-a">Evet! Sendigo hem WhatsApp Business hem de standart kişisel WhatsApp hesaplarıyla çalışır. WhatsApp Web QR kodu aracılığıyla bağlanan her hesap desteklenir.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">AI özellikleri nasıl çalışıyor?<span class="faq-arrow">+</span></button>
+      <div class="faq-a">Sendigo, OpenAI (GPT) ve Anthropic (Claude) API'larını destekler. Kendi API anahtarını girerek Selam panelinde yemleme mesajları, kampanya şablonları veya kişiselleştirilmiş içerik üretebilirsin. API anahtarın güvende tutulur, sunucularımıza gönderilmez.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Uygulama hangi işletim sisteminde çalışıyor?<span class="faq-arrow">+</span></button>
+      <div class="faq-a">Sendigo şu an yalnızca Windows (64-bit) için mevcuttur. macOS ve Linux desteği yol haritamızda bulunmaktadır.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">WhatsApp numaramı uygulamaya nasıl bağlarım?<span class="faq-arrow">+</span></button>
+      <div class="faq-a">Klasik WhatsApp Web QR kodu yöntemiyle bağlanırsın. Telefonunda WhatsApp → Ayarlar → Bağlı Cihazlar → Cihaz Ekle yolunu izleyerek QR'ı tara, bağlantı saniyeler içinde kurulur.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Proxy olmadan kullanabilir miyim?<span class="faq-arrow">+</span></button>
+      <div class="faq-a">Evet, proxy zorunlu değildir. Ancak birden fazla hesap kullanıyorsan her hesaba farklı bir proxy atamanı öneririz. Bu, WhatsApp'ın IP bazlı tespitini engeller ve hesapların birbirleriyle ilişkilendirilmesini önler.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Ödeme yaptıktan sonra lisansımı nasıl alırım?<span class="faq-arrow">+</span></button>
+      <div class="faq-a">Satın alma işlemi tamamlandıktan sonra lisans anahtarın WhatsApp veya e-posta üzerinden iletilir. Destek için her zaman bizimle iletişime geçebilirsin.</div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTH MODAL -->
+<div class="auth-overlay" id="auth-overlay">
+  <div class="auth-box">
+    <button class="auth-close" onclick="closeAuth()">×</button>
+    <div class="auth-logo">
+      <img src="icon-preview.png" alt="logo" style="width:36px;height:36px;border-radius:10px" />
+      <span>Sendigo</span>
+    </div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tab-login" onclick="switchTab('login')">Giriş Yap</div>
+      <div class="auth-tab" id="tab-register" onclick="switchTab('register')">Üye Ol</div>
+    </div>
+    <div class="auth-err" id="auth-err"></div>
+    <div id="login-form">
+      <div class="auth-field"><label>E-posta</label><input type="email" id="login-email" placeholder="ornek@mail.com" /></div>
+      <div class="auth-field"><label>Şifre</label><input type="password" id="login-pass" placeholder="••••••••" /></div>
+      <button class="auth-submit" id="login-btn" onclick="doLogin()">Giriş Yap</button>
+      <div class="auth-switch">Hesabın yok mu? <a onclick="switchTab('register')">Üye ol</a></div>
+    </div>
+    <div id="register-form" style="display:none">
+      <div class="auth-field"><label>E-posta</label><input type="email" id="reg-email" placeholder="ornek@mail.com" /></div>
+      <div class="auth-field"><label>Şifre</label><input type="password" id="reg-pass" placeholder="En az 6 karakter" /></div>
+      <button class="auth-submit" id="register-btn" onclick="doRegister()">Üye Ol & Lisans Al</button>
+      <div class="auth-switch">Zaten üye misin? <a onclick="switchTab('login')">Giriş yap</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD MODAL -->
+<div class="dash-overlay" id="dash-overlay">
+  <div class="dash-box">
+    <button class="dash-close" onclick="closeDash()">×</button>
+    <div class="dash-header">
+      <div class="dash-avatar" id="dash-avatar">S</div>
+      <div>
+        <h2 id="dash-name">Hoş geldin!</h2>
+        <p id="dash-email">kullanici@mail.com</p>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-card-label">📦 Abonelik Planı</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <span class="dash-plan-badge" id="dash-plan">✓ Deneme (1 gün)</span>
+        <a href="#pricing" onclick="closeDash()" style="font-size:13px;color:#a78bfa;text-decoration:none;font-weight:600">Yükselt →</a>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-card-label">🔑 Lisans Anahtarı</div>
+      <div class="license-box">
+        <span class="license-key" id="dash-license">SNDG-XXXX-XXXX-XXXX</span>
+        <button class="license-copy" onclick="copyLicense()" title="Kopyala">📋</button>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px">Uygulamayı indirip ilk açışta bu anahtarı girin.</p>
+    </div>
+
+    <a href="#" class="dash-dl-btn" id="dash-dl-btn">⬇️ Sendigo'yu İndir (Windows)</a>
+    <button class="dash-logout" onclick="doLogout()">Çıkış Yap</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo" style="font-size:18px;text-decoration:none">
+        <img src="icon-preview.png" alt="Sendigo Logo" style="width:28px;height:28px;border-radius:7px" />
+        <span class="logo-name">Sendigo</span><span class="logo-dot">.pro</span>
+      </a>
+      <p>Çoklu WhatsApp hesabı yönetiminde profesyonel çözüm. Ban olmadan, güvenle, AI destekli.</p>
+    </div>
+    <div class="footer-links">
+      <h4>Ürün</h4>
+      <a href="#preview">Uygulama Önizleme</a>
+      <a href="#features">Özellikler</a>
+      <a href="#antiban">Anti-Ban</a>
+      <a href="#pricing">Fiyatlar</a>
+    </div>
+    <div class="footer-links">
+      <h4>Destek</h4>
+      <a href="#sss">SSS</a>
+      <a href="#" target="_blank">WhatsApp Destek</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Sendigo.pro — Tüm hakları saklıdır.</span>
+    <div style="display:flex;gap:20px">
+      <a href="#">Gizlilik Politikası</a>
+      <a href="#">Kullanım Koşulları</a>
+    </div>
+  </div>
+</footer>
+
+<!-- LemonSqueezy Overlay Checkout -->
+<script src="https://app.lemonsqueezy.com/js/lemon.js" defer></script>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+  import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+  // ── BURAYA KENDİ FIREBASE CONFIG'İNİ YAZ ──
+  const firebaseConfig = {
+    apiKey:            "AIzaSyCObDyko3vNGAnpMXijbQy5s4yDxxuRdqw",
+    authDomain:        "sendigo-dc1b3.firebaseapp.com",
+    projectId:         "sendigo-dc1b3",
+    storageBucket:     "sendigo-dc1b3.firebasestorage.app",
+    messagingSenderId: "351622815411",
+    appId:             "1:351622815411:web:f46d634945d31b17461ac6"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  // Lisans anahtarı üret
+  function genLicense() {
+    const s = () => Math.random().toString(36).substring(2,6).toUpperCase();
+    return `SNDG-${s()}-${s()}-${s()}`;
+  }
+
+  // Auth durumu değişince navbar güncelle
+  onAuthStateChanged(auth, async user => {
+    const btn = document.getElementById('nav-login-btn');
+    if (user) {
+      btn.textContent = '👤 Hesabım';
+      btn.onclick = openDash;
+    } else {
+      btn.textContent = 'Giriş Yap';
+      btn.onclick = () => openAuth('login');
+    }
+  });
+
+  // ── Kayıt ──
+  window.doRegister = async function() {
+    const email = document.getElementById('reg-email').value.trim();
+    const pass  = document.getElementById('reg-pass').value;
+    const btn   = document.getElementById('register-btn');
+    const err   = document.getElementById('auth-err');
+
+    if (!email || !pass) { showErr('Tüm alanları doldurun.'); return; }
+    if (pass.length < 6) { showErr('Şifre en az 6 karakter olmalı.'); return; }
+
+    btn.disabled = true; btn.textContent = 'Üye olunuyor…';
+    err.classList.remove('show');
+
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+
+      const license = genLicense();
+      const createdAt = new Date().toISOString();
+      const expiresAt = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString(); // 1 gün trial
+
+      await setDoc(doc(db, 'users', cred.user.uid), {
+        email, license, plan: 'trial', createdAt, expiresAt
+      });
+      // Lisans anahtarı ile hızlı sorgu için ayrı koleksiyon
+      await setDoc(doc(db, 'licenses', license), {
+        uid: cred.user.uid, email, plan: 'trial', createdAt, expiresAt
+      });
+
+      closeAuth();
+      openDash();
+    } catch(e) {
+      showErr(firebaseErrMsg(e.code));
+    } finally {
+      btn.disabled = false; btn.textContent = 'Üye Ol & Lisans Al';
+    }
+  };
+
+  // ── Giriş ──
+  window.doLogin = async function() {
+    const email = document.getElementById('login-email').value.trim();
+    const pass  = document.getElementById('login-pass').value;
+    const btn   = document.getElementById('login-btn');
+
+    btn.disabled = true; btn.textContent = 'Giriş yapılıyor…';
+    document.getElementById('auth-err').classList.remove('show');
+
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+      closeAuth();
+      openDash();
+    } catch(e) {
+      showErr(firebaseErrMsg(e.code));
+    } finally {
+      btn.disabled = false; btn.textContent = 'Giriş Yap';
+    }
+  };
+
+  // ── Çıkış ──
+  window.doLogout = async function() {
+    await signOut(auth);
+    closeDash();
+  };
+
+  // ── Dashboard aç ──
+  window.openDash = async function() {
+    const user = auth.currentUser;
+    if (!user) { openAuth('login'); return; }
+
+    document.getElementById('dash-name').textContent  = user.email.split('@')[0];
+    document.getElementById('dash-email').textContent = user.email;
+    document.getElementById('dash-avatar').textContent = user.email[0].toUpperCase();
+
+    // Firestore'dan lisans ve plan çek
+    const snap = await getDoc(doc(db, 'users', user.uid));
+    if (snap.exists()) {
+      const data = snap.data();
+      document.getElementById('dash-license').textContent = data.license || '—';
+      const planLabels = { trial:'✓ Deneme (1 gün)', starter:'⭐ Starter', pro:'🚀 Pro', business:'💼 Business' };
+      document.getElementById('dash-plan').textContent = planLabels[data.plan] || data.plan;
+    }
+
+    document.getElementById('dash-overlay').classList.add('open');
+  };
+
+  window.closeDash = function() {
+    document.getElementById('dash-overlay').classList.remove('open');
+  };
+
+  window.copyLicense = function() {
+    const key = document.getElementById('dash-license').textContent;
+    navigator.clipboard.writeText(key).then(() => {
+      const btn = document.querySelector('.license-copy');
+      btn.textContent = '✅'; setTimeout(() => btn.textContent = '📋', 1500);
+    });
+  };
+
+  function showErr(msg) {
+    const el = document.getElementById('auth-err');
+    el.textContent = msg; el.classList.add('show');
+  }
+
+  function firebaseErrMsg(code) {
+    const map = {
+      'auth/email-already-in-use':   'Bu e-posta zaten kayıtlı.',
+      'auth/invalid-email':           'Geçersiz e-posta adresi.',
+      'auth/wrong-password':          'Şifre hatalı.',
+      'auth/user-not-found':          'Bu e-posta ile kayıtlı hesap bulunamadı.',
+      'auth/too-many-requests':       'Çok fazla deneme. Lütfen bekleyin.',
+      'auth/weak-password':           'Şifre çok zayıf.',
+      'auth/invalid-credential':      'E-posta veya şifre hatalı.',
+    };
+    return map[code] || 'Bir hata oluştu. Tekrar deneyin.';
+  }
+</script>
+
+<script>
+  // Fiyatlar: [haftalık, aylık]
+  const prices  = { starter:['₺190','₺590'], pro:['₺290','₺990'], business:['₺490','₺1690'] };
+  const periods = { starter:['/hafta','/ay'],   pro:['/hafta','/ay'],   business:['/hafta','/ay'] };
+  const periodLabels = ['haftalık faturalandırma', 'aylık faturalandırma'];
+
+  // LemonSqueezy URL'leri — ürünleri oluşturunca buraya yaz
+  const lsUrls = {
+    starter:  { weekly: 'https://sendigopro.lemonsqueezy.com/checkout/buy/3f58c55c-403d-4071-b7a9-027fd84462d4',  monthly: 'https://sendigopro.lemonsqueezy.com/checkout/buy/a8e90ef4-5171-4f6d-8f42-dc683fa0f30c' },
+    pro:      { weekly: 'https://sendigopro.lemonsqueezy.com/checkout/buy/833758e2-74ea-4ab5-860e-efc3b6838bfd',  monthly: 'https://sendigopro.lemonsqueezy.com/checkout/buy/70b38b70-e6ee-437f-8634-b022cc940ed0' },
+    business: { weekly: 'https://sendigopro.lemonsqueezy.com/checkout/buy/4bf6f7b2-0ff9-4e33-8616-de15c0f0d2e6', monthly: 'https://sendigopro.lemonsqueezy.com/checkout/buy/a3003244-11f8-4cec-90aa-6c2d5ed0333e' },
+  };
+
+  let isMonthly = false;
+
+  function setBilling(type) {
+    isMonthly = (type === 'monthly');
+    document.getElementById('billing-toggle').classList.toggle('annual', isMonthly);
+    document.getElementById('weekly-label').classList.toggle('active', !isMonthly);
+    document.getElementById('monthly-label').classList.toggle('active', isMonthly);
+    const idx = isMonthly ? 1 : 0;
+    const mode = isMonthly ? 'monthly' : 'weekly';
+    ['starter','pro','business'].forEach(p => {
+      document.getElementById('price-'+p).innerHTML  = prices[p][idx] + '<span>' + periods[p][idx] + '</span>';
+      document.getElementById('period-'+p).textContent = periodLabels[idx];
+      const btn = document.getElementById('btn-'+p);
+      if (btn && lsUrls[p][mode] && !lsUrls[p][mode].includes('URL')) btn.href = lsUrls[p][mode];
+    });
+  }
+
+  function toggleBilling() {
+    setBilling(isMonthly ? 'weekly' : 'monthly');
+  }
+
+  function toggleFaq(btn) {
+    const item = btn.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Auth modal
+  window.openAuth = function(tab) {
+    document.getElementById('auth-overlay').classList.add('open');
+    switchTab(tab || 'login');
+    document.getElementById('auth-err').classList.remove('show');
+  };
+  window.closeAuth = function() {
+    document.getElementById('auth-overlay').classList.remove('open');
+  };
+  window.switchTab = function(tab) {
+    document.getElementById('login-form').style.display    = tab === 'login'    ? '' : 'none';
+    document.getElementById('register-form').style.display = tab === 'register' ? '' : 'none';
+    document.getElementById('tab-login').classList.toggle('active',    tab === 'login');
+    document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+    document.getElementById('auth-err').classList.remove('show');
+  };
+  // ESC kapatır
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeAuth(); window.closeDash && closeDash(); }
+  });
+  document.getElementById('auth-overlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeAuth();
+  });
+  document.getElementById('dash-overlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget) window.closeDash && closeDash();
+  });
+
+  // Scroll fade-in
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.feat-card,.ab-item,.price-card').forEach(el => {
+    el.style.cssText += ';opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease';
+    obs.observe(el);
+  });
+</script>
+</body>
+</html>
