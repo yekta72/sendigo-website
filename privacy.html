@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gizlilik Politikası — Sendigo</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23100c24'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237c3aed'/%3E%3Cstop offset='1' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='18,22 82,50 18,78 30,50' fill='url(%23g)'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #080812; --bg2: #0d0d1f; --bg3: #12122a;
+      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.13);
+      --text: #f0f0ff; --muted: #9090b0; --dim: #5a5a7a;
+      --accent: #7c3aed; --cyan: #06b6d4;
+      --grad: linear-gradient(135deg, #7c3aed, #6366f1, #06b6d4);
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 68px;
+      background: rgba(8,8,18,0.92); backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 20px; font-weight: 800; text-decoration: none;
+    }
+    .nav-logo img { width: 32px; height: 32px; border-radius: 8px; }
+    .logo-name { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .logo-dot  { color: var(--cyan); -webkit-text-fill-color: var(--cyan); }
+
+    .page-wrap {
+      max-width: 760px; margin: 0 auto;
+      padding: 120px 24px 80px;
+    }
+    .page-label {
+      display: inline-block;
+      background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.35);
+      color: #a78bfa; padding: 5px 14px; border-radius: 100px;
+      font-size: 13px; font-weight: 600; margin-bottom: 20px;
+    }
+    h1 { font-size: 36px; font-weight: 900; letter-spacing: -1px; margin-bottom: 10px; }
+    .meta { font-size: 14px; color: var(--muted); margin-bottom: 48px; }
+
+    .section { margin-bottom: 40px; }
+    .section h2 {
+      font-size: 18px; font-weight: 700; margin-bottom: 14px;
+      color: #c4b5fd;
+    }
+    .section p { color: var(--muted); font-size: 15px; margin-bottom: 12px; }
+    .section ul { color: var(--muted); font-size: 15px; padding-left: 20px; margin-bottom: 12px; }
+    .section ul li { margin-bottom: 8px; }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+    footer {
+      text-align: center; padding: 32px 24px;
+      font-size: 13px; color: var(--dim);
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--muted); text-decoration: none; margin: 0 10px; }
+    footer a:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="icon-preview.png" alt="Sendigo" />
+    <span class="logo-name">Sendigo</span><span class="logo-dot">.pro</span>
+  </a>
+  <a href="index.html" style="color:var(--muted);text-decoration:none;font-size:14px;font-weight:500">← Ana Sayfa</a>
+</nav>
+
+<div class="page-wrap">
+  <span class="page-label">Yasal</span>
+  <h1>Gizlilik Politikası</h1>
+  <p class="meta">Son güncelleme: Mayıs 2025</p>
+
+  <div class="section">
+    <h2>1. Genel Bakış</h2>
+    <p>Sendigo ("biz", "uygulama") olarak kullanıcılarımızın gizliliğine önem veriyoruz. Bu politika, Sendigo masaüstü uygulaması ve sendigo.pro web sitesini kullanırken hangi verilerin toplandığını, nasıl kullanıldığını ve nasıl korunduğunu açıklar.</p>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="section">
+    <h2>2. Topladığımız Veriler</h2>
+    <p><strong style="color:var(--text)">Hesap verileri:</strong> Kayıt sırasında e-posta adresinizi alırız. Şifreniz Firebase Authentication tarafından şifreli olarak saklanır; biz göremeyiz.</p>
+    <p><strong style="color:var(--text)">Lisans verileri:</strong> Abonelik planınız, lisans anahtarınız ve bitiş tarihi Firestore veritabanında tutulur.</p>
+    <p><strong style="color:var(--text)">Ödeme verileri:</strong> Ödemeler LemonSqueezy altyapısıyla işlenir. Kredi kartı veya banka bilgileriniz Sendigo sunucularında saklanmaz.</p>
+    <p><strong style="color:var(--text)">Uygulama içi veriler:</strong> WhatsApp hesap bilgileri, kampanya verileri ve numaralar yalnızca bilgisayarınızda yerel olarak saklanır. Sunucularımıza gönderilmez.</p>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="section">
+    <h2>3. Verilerin Kullanımı</h2>
+    <p>Topladığımız veriler yalnızca şu amaçlar için kullanılır:</p>
+    <ul>
+      <li>Hesabınızı oluşturmak ve yönetmek</li>
+      <li>Lisans doğrulaması yapmak</li>
+      <li>Satın alma işlemlerini tamamlamak</li>
+      <li>Destek taleplerini karşılamak</li>
+      <li>Uygulama güncellemeleri hakkında bilgilendirme yapmak</li>
+    </ul>
+    <p>Verilerinizi üçüncü taraflarla satmıyor, kiralamıyor veya pazarlama amacıyla paylaşmıyoruz.</p>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="section">
+    <h2>4. Üçüncü Taraf Hizmetler</h2>
+    <p>Sendigo aşağıdaki üçüncü taraf hizmetleri kullanır:</p>
+    <ul>
+      <li><strong style="color:var(--text)">Firebase (Google):</strong> Kimlik doğrulama ve veritabanı</li>
+      <li><strong style="color:var(--text)">LemonSqueezy:</strong> Ödeme işlemleri</li>
+      <li><strong style="color:var(--text)">GitHub:</strong> Uygulama dağıtımı ve güncellemeleri</li>
+    </ul>
+    <p>Bu hizmetlerin kendi gizlilik politikaları geçerlidir. Verileriniz bu hizmetlerin sunucularında ilgili politikalar çerçevesinde işlenir.</p>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="section">
+    <h2>5. Veri Güvenliği</h2>
+    <p>Verilerinizi korumak için endüstri standardı güvenlik önlemleri alınmaktadır. Firebase, verilerinizi şifrelenmiş kanallar üzerinden iletir ve güvenli sunucularda saklar. Ancak internet üzerinden hiçbir veri iletiminin %100 güvenli olmadığını hatırlatırız.</p>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="section">
+    <h2>6. Çerezler</h2>
+    <p>sendigo.pro web sitesi, oturum yönetimi için Firebase Authentication'ın kullandığı teknik çerezleri kullanır. Bu çerezler reklam veya izleme amacıyla kullanılmaz.</p>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="section">
+    <h2>7. Haklarınız</h2>
+    <p>Dilediğiniz zaman şunları yapabilirsiniz:</p>
+    <ul>
+      <li>Hesabınızdaki verilere erişim talep edebilirsiniz</li>
+      <li>Hesabınızın silinmesini isteyebilirsiniz</li>
+      <li>Verilerinizin düzeltilmesini talep edebilirsiniz</li>
+    </ul>
+    <p>Bu talepler için destek kanalımızdan bize ulaşabilirsiniz.</p>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="section">
+    <h2>8. İletişim</h2>
+    <p>Gizlilik politikamız hakkında sorularınız için WhatsApp destek hattımız veya e-posta üzerinden bize ulaşabilirsiniz.</p>
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 Sendigo.pro — Tüm hakları saklıdır.</span><br /><br />
+  <a href="index.html">Ana Sayfa</a>
+  <a href="privacy.html">Gizlilik Politikası</a>
+  <a href="terms.html">Kullanım Koşulları</a>
+</footer>
+
+</body>
+</html>
