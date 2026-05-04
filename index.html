@@ -613,6 +613,38 @@
     .footer-bottom a { color: var(--dim); text-decoration: none; }
     .footer-bottom a:hover { color: var(--muted); }
 
+    /* ── INTERACTIVE PREVIEW ── */
+    .mock-clickable {
+      cursor: pointer;
+      transition: border-color .18s, transform .15s, box-shadow .18s;
+    }
+    .mock-clickable:hover {
+      border-color: rgba(124,58,237,0.5) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(124,58,237,0.18);
+    }
+    .mock-card-hint {
+      font-size: 8px; color: var(--accent2); margin-top: 4px;
+      font-weight: 700; opacity: 0.7; letter-spacing: .3px;
+    }
+    .mock-nav-btn { cursor: pointer; transition: background .15s, color .15s, transform .1s; user-select: none; }
+    .mock-nav-btn:hover:not(.active) { background: rgba(124,58,237,0.12); color: #a78bfa; transform: translateY(-1px); }
+    #mock-popup { display: none; }
+    #mock-popup.open { display: flex !important; }
+    .mock-popup-tag {
+      font-size: 10px; font-weight: 600; padding: 2px 9px;
+      border-radius: 100px; background: rgba(99,102,241,0.15);
+      color: #818cf8; border: 1px solid rgba(99,102,241,0.25);
+    }
+    .mock-panel { animation: panelIn .2s ease; }
+    @keyframes panelIn { from { opacity:0; transform:translateX(8px); } to { opacity:1; transform:translateX(0); } }
+    .preview-hint {
+      text-align:center; font-size:13px; color:var(--dim); margin-top:18px;
+      display:flex; align-items:center; justify-content:center; gap:8px;
+    }
+    .preview-hint span { animation: bounce 2s infinite; display:inline-block; }
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .antiban-wrap { grid-template-columns: 1fr; }
@@ -683,10 +715,10 @@
     <div class="section-head" style="margin-bottom:40px">
       <span class="section-label">Uygulama Önizlemesi</span>
       <h2 class="section-title">Güçlü, sade ve hızlı</h2>
-      <p class="section-sub">Karanlık tema, anlık durum göstergeleri ve sezgisel arayüzle tüm hesaplarını kontrol altında tut.</p>
+      <p class="section-sub">Sekmelere ve kartlara tıkla, özelliklerin nasıl çalıştığını gör. Karanlık tema, anlık göstergeler, sezgisel arayüz.</p>
     </div>
 
-    <div class="preview-mockup">
+    <div class="preview-mockup" id="preview-mockup">
       <!-- Title bar -->
       <div class="mock-titlebar">
         <div class="mock-dot red"></div>
@@ -707,7 +739,6 @@
             <span>📤 247 Bugün</span>
           </div>
         </div>
-        <!-- Accounts -->
         <div class="mock-account active">
           <div class="mock-avatar" style="background:rgba(124,58,237,0.25);color:#a78bfa;">S</div>
           <div class="mock-acct-info">
@@ -742,59 +773,44 @@
         </div>
 
         <div class="mock-sb-nav">
-          <div class="mock-nav-btn active">📋 Kampanya</div>
-          <div class="mock-nav-btn">💪 Güçlen.</div>
-          <div class="mock-nav-btn">👋 Selam</div>
+          <div class="mock-nav-btn active" id="mock-tab-0" onclick="switchMockTab(0)">📋 Kampanya</div>
+          <div class="mock-nav-btn" id="mock-tab-1" onclick="switchMockTab(1)">💪 Güçlen.</div>
+          <div class="mock-nav-btn" id="mock-tab-2" onclick="switchMockTab(2)">👋 Selam</div>
         </div>
       </div>
 
-      <!-- Main panel -->
-      <div class="mock-main">
+      <!-- Panel 0: Kampanya -->
+      <div class="mock-main mock-panel" id="mock-panel-0">
         <div>
           <div class="mock-panel-title">📋 Kampanya Yöneticisi</div>
           <div class="mock-panel-sub">Satış Hesabı — Aktif kampanya</div>
         </div>
-
         <div class="mock-row">
-          <div class="mock-card">
+          <div class="mock-card mock-clickable" onclick="openMockPopup('stats')">
             <div class="mock-card-label">Gönderilen</div>
             <div class="mock-card-val green">87 / 200</div>
             <div class="mock-progress-track"><div class="mock-progress-fill" style="width:43%"></div></div>
+            <div class="mock-card-hint">↗ detay</div>
           </div>
-          <div class="mock-card">
+          <div class="mock-card mock-clickable" onclick="openMockPopup('conversion')">
             <div class="mock-card-label">Dönüşüm</div>
             <div class="mock-card-val purple">%23</div>
+            <div class="mock-card-hint">↗ detay</div>
           </div>
-          <div class="mock-card">
-            <div class="mock-card-label">Kalan</div>
-            <div class="mock-card-val" style="color:#a78bfa;">113</div>
-          </div>
-        </div>
-
-        <div class="mock-log">
-          <div class="mock-log-title">Aktivite Logu</div>
-          <div class="mock-log-line">
-            <div class="mock-log-dot sent"></div>
-            <span class="mock-log-text">✅ [Şablon A] → +90 532 *** *291 gönderildi</span>
-          </div>
-          <div class="mock-log-line">
-            <div class="mock-log-dot sent"></div>
-            <span class="mock-log-text">✅ [Şablon B] → +90 542 *** *774 gönderildi</span>
-          </div>
-          <div class="mock-log-line">
-            <div class="mock-log-dot wait"></div>
-            <span class="mock-log-text">⏳ Bekleniyor (insan hızı simülasyonu)…</span>
-          </div>
-          <div class="mock-log-line">
-            <div class="mock-log-dot sent"></div>
-            <span class="mock-log-text">✅ [Şablon A] → +90 505 *** *033 gönderildi</span>
-          </div>
-          <div class="mock-log-line">
-            <div class="mock-log-dot warn"></div>
-            <span class="mock-log-text">👋 +90 533 *** *819 zaten konuşulmuş, atlandı</span>
+          <div class="mock-card mock-clickable" onclick="openMockPopup('antiban')">
+            <div class="mock-card-label">Anti-ban</div>
+            <div class="mock-card-val" style="color:#4ade80;font-size:13px;margin-top:3px;">✅ Aktif</div>
+            <div class="mock-card-hint">↗ detay</div>
           </div>
         </div>
-
+        <div class="mock-log mock-clickable" onclick="openMockPopup('log')">
+          <div class="mock-log-title">Aktivite Logu <span style="float:right;opacity:.5;font-size:8px">↗ tıkla</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot sent"></div><span class="mock-log-text">✅ [Şablon A] → +90 532 *** *291 gönderildi</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot sent"></div><span class="mock-log-text">✅ [Şablon B] → +90 542 *** *774 gönderildi</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot wait"></div><span class="mock-log-text">⏳ Bekleniyor (insan hızı simülasyonu)…</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot sent"></div><span class="mock-log-text">✅ [Şablon A] → +90 505 *** *033 gönderildi</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot warn"></div><span class="mock-log-text">👋 +90 533 *** *819 zaten konuşulmuş, atlandı</span></div>
+        </div>
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
           <div class="mock-status-row">
             <div class="mock-status-dot"></div>
@@ -802,11 +818,110 @@
           </div>
           <div class="mock-btns">
             <div class="mock-btn secondary">⏸ Duraklat</div>
-            <div class="mock-btn secondary">🛑 Güvenli Durdur</div>
+            <div class="mock-btn secondary mock-clickable" style="color:#a78bfa;border-color:rgba(124,58,237,0.3)" onclick="openMockPopup('antiban')">🛡 Koruma</div>
           </div>
         </div>
       </div>
+
+      <!-- Panel 1: Güçlendirme -->
+      <div class="mock-main mock-panel" id="mock-panel-1" style="display:none">
+        <div>
+          <div class="mock-panel-title">💪 Hesap Güçlendirme</div>
+          <div class="mock-panel-sub">Müşteri Hizm. — Warm-up aktif (23 dk)</div>
+        </div>
+        <div class="mock-row">
+          <div class="mock-card mock-clickable" onclick="openMockPopup('warmup')">
+            <div class="mock-card-label">Tamamlanan Tur</div>
+            <div class="mock-card-val" style="color:#06b6d4;">48</div>
+            <div class="mock-card-hint">↗ detay</div>
+          </div>
+          <div class="mock-card mock-clickable" onclick="openMockPopup('warmup')">
+            <div class="mock-card-label">Kalan Süre</div>
+            <div class="mock-card-val" style="color:#a78bfa;">37:12</div>
+            <div class="mock-card-hint">↗ detay</div>
+          </div>
+          <div class="mock-card mock-clickable" onclick="openMockPopup('warmup')">
+            <div class="mock-card-label">Güven Skoru</div>
+            <div class="mock-card-val" style="color:#4ade80;font-size:14px;">↑ Artıyor</div>
+            <div class="mock-card-hint">↗ detay</div>
+          </div>
+        </div>
+        <div class="mock-log mock-clickable" onclick="openMockPopup('warmup')">
+          <div class="mock-log-title">Güçlendirme Konuşmaları <span style="float:right;opacity:.5;font-size:8px">↗ tıkla</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot" style="background:#06b6d4"></div><span class="mock-log-text">💬 S → M: "Merhaba! Bugün nasılsın?"</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot" style="background:#a78bfa"></div><span class="mock-log-text">💬 M → S: "İyiyim, sen nasılsın?"</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot wait"></div><span class="mock-log-text">⌨️ Yazıyor simülasyonu… (2.4 sn)</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot" style="background:#06b6d4"></div><span class="mock-log-text">💬 S → M: "Harika, görüşmek güzel 👍"</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot" style="background:#4ade80"></div><span class="mock-log-text">✅ Tur 48 tamamlandı — sonraki: 31 sn</span></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div class="mock-status-row">
+            <div class="mock-status-dot" style="background:#06b6d4;box-shadow:0 0 6px #06b6d460;animation:pulse 2s infinite"></div>
+            <span>Warm-up sürüyor — Güven skoru artıyor</span>
+          </div>
+          <div class="mock-btns">
+            <div class="mock-btn secondary">⏸ Duraklat</div>
+            <div class="mock-btn primary mock-clickable" onclick="openMockPopup('warmup')">ℹ Detaylar</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 2: Selam -->
+      <div class="mock-main mock-panel" id="mock-panel-2" style="display:none">
+        <div>
+          <div class="mock-panel-title">👋 Selam &amp; Yemleme Modu</div>
+          <div class="mock-panel-sub">Pazarlama — 94 kişi bekliyor</div>
+        </div>
+        <div class="mock-row">
+          <div class="mock-card mock-clickable" onclick="openMockPopup('greet')">
+            <div class="mock-card-label">Selamlanan</div>
+            <div class="mock-card-val green">42</div>
+            <div class="mock-card-hint">↗ detay</div>
+          </div>
+          <div class="mock-card mock-clickable" onclick="openMockPopup('greet')">
+            <div class="mock-card-label">Yanıt Oranı</div>
+            <div class="mock-card-val purple">%61</div>
+            <div class="mock-card-hint">↗ detay</div>
+          </div>
+          <div class="mock-card mock-clickable" onclick="openMockPopup('greet')">
+            <div class="mock-card-label">Şablon Gönder.</div>
+            <div class="mock-card-val" style="color:#fbbf24;">18</div>
+            <div class="mock-card-hint">↗ detay</div>
+          </div>
+        </div>
+        <div class="mock-log mock-clickable" onclick="openMockPopup('greet')">
+          <div class="mock-log-title">Selam Akışı <span style="float:right;opacity:.5;font-size:8px">↗ tıkla</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot sent"></div><span class="mock-log-text">👋 +90 532 *** *291'e selam gönderildi</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot" style="background:#a78bfa"></div><span class="mock-log-text">💬 Cevap aldı → Şablon sırasına alındı</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot wait"></div><span class="mock-log-text">⏳ +90 542 *** *774 cevap bekleniyor…</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot sent"></div><span class="mock-log-text">📤 +90 505 *** *033'e şablon iletildi</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot warn"></div><span class="mock-log-text">⏭ +90 533 *** *819 cevap vermedi, atlandı</span></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div class="mock-status-row">
+            <div class="mock-status-dot" style="background:#fbbf24;box-shadow:0 0 6px #fbbf2460;animation:pulse 2s infinite"></div>
+            <span>Selam modu çalışıyor — Yanıt oranı yüksek</span>
+          </div>
+          <div class="mock-btns">
+            <div class="mock-btn secondary">⏸ Duraklat</div>
+            <div class="mock-btn primary mock-clickable" onclick="openMockPopup('greet')">ℹ Detaylar</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Pop-up Modal (inside mockup) -->
+      <div id="mock-popup" style="position:absolute;inset:0;z-index:10;background:rgba(4,4,14,0.9);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;">
+        <div id="mock-popup-box" style="background:#12122a;border:1px solid rgba(124,58,237,0.45);border-radius:18px;padding:26px 24px;max-width:360px;width:100%;position:relative;box-shadow:0 20px 60px rgba(124,58,237,0.3);">
+          <button onclick="closeMockPopup()" style="position:absolute;top:10px;right:12px;background:none;border:none;color:#5a5a7a;font-size:20px;cursor:pointer;line-height:1;transition:color .15s;" onmouseover="this.style.color='#f0f0ff'" onmouseout="this.style.color='#5a5a7a'">✕</button>
+          <div id="mock-popup-icon" style="font-size:40px;margin-bottom:14px;text-align:center;"></div>
+          <h3 id="mock-popup-title" style="font-size:16px;font-weight:800;margin-bottom:10px;text-align:center;background:linear-gradient(135deg,#a78bfa,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;"></h3>
+          <p id="mock-popup-body" style="font-size:12px;color:#9090b0;line-height:1.75;text-align:left;"></p>
+          <div id="mock-popup-tags" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:16px;"></div>
+        </div>
+      </div>
     </div>
+
+    <p class="preview-hint"><span>👆</span> Sekmelere ve kartlara tıklayarak özellikleri keşfet</p>
   </div>
 </section>
 
@@ -1000,7 +1115,7 @@
         <li>Proxy desteği + otomatik rotasyon</li>
         <li>Hesap güçlendirme</li>
         <li>Selam & Yemleme modu</li>
-        <li>AI şablon üretimi (OpenAI/Claude)</li>
+        <li class="cross">AI şablon üretimi (OpenAI/Claude)</li>
         <li class="cross">Zamanlı başlatma</li>
         <li class="cross">Öncelikli destek</li>
       </ul>
@@ -1522,6 +1637,90 @@
     el.style.cssText += ';opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease';
     obs.observe(el);
   });
+</script>
+
+<script>
+/* ── INTERACTIVE PREVIEW ── */
+var _mockActiveTab = 0;
+
+window.switchMockTab = function(idx) {
+  if (idx === _mockActiveTab) return;
+  closeMockPopup();
+  // deactivate old tab
+  document.getElementById('mock-tab-' + _mockActiveTab).classList.remove('active');
+  document.getElementById('mock-panel-' + _mockActiveTab).style.display = 'none';
+  // activate new tab
+  _mockActiveTab = idx;
+  document.getElementById('mock-tab-' + idx).classList.add('active');
+  var panel = document.getElementById('mock-panel-' + idx);
+  panel.style.display = 'flex';
+  // re-trigger animation
+  panel.style.animation = 'none';
+  panel.offsetHeight; // reflow
+  panel.style.animation = '';
+};
+
+var MOCK_POPUPS = {
+  stats: {
+    icon: '📊',
+    title: 'Kampanya İstatistikleri',
+    body: 'Kampanya boyunca gönderilen mesaj sayısını, kalan numaraları ve anlık ilerlemeyi takip et. Günlük limit aşılmadan önce otomatik duraklama — hesabın güvende kalır.\n\n• Toplam 200 numaradan 87\'si gönderildi (%43)\n• Günlük limit: 200 mesaj/gün\n• Kalan: 113 mesaj\n• Tahmini bitiş: ~2 saat',
+    tags: ['Anlık Takip', 'Günlük Limit', 'İlerleme Çubuğu']
+  },
+  conversion: {
+    icon: '📈',
+    title: 'Dönüşüm Takibi',
+    body: 'Mesajına cevap veren kişilerin oranını görüntüle. Hangi şablonun daha iyi performans gösterdiğini karşılaştır ve kampanyalarını optimize et.\n\n• Mevcut dönüşüm: %23 (sektör ortalaması %8)\n• En iyi şablon: Şablon A (%31 yanıt)\n• Son 7 gün trendi: ↑ +4%\n• Cevap veren: 20 kişi',
+    tags: ['Dönüşüm Oranı', 'Şablon Karşılaştırma', 'Trend Analizi']
+  },
+  antiban: {
+    icon: '🛡️',
+    title: 'Anti-Ban Koruması',
+    body: 'Gelişmiş davranış simülasyonu ile WhatsApp\'ın spam dedektörünü atla.\n\n• İnsan hızı simülasyonu: karakter başına 50–220 ms gecikme\n• Lognormal zamanlama: doğal mesaj aralıkları\n• Günlük limit: hesap başına otomatik throttle\n• Daha önce konuşulan numaraları otomatik atla\n• Gece saatlerinde kampanya otomatik duraklar\n• Her hesaba benzersiz cihaz fingerprint',
+    tags: ['İnsan Simülasyonu', 'Günlük Limit', 'Akıllı Zamanlama', 'Fingerprint']
+  },
+  log: {
+    icon: '📋',
+    title: 'Canlı Aktivite Logu',
+    body: 'Her gönderilen mesaj, atlanan numara ve bekleyiş anı gerçek zamanlı loglanır. Kampanyanın tam olarak ne yaptığını saniye saniye izle.\n\n• ✅ Yeşil: mesaj başarıyla gönderildi\n• 🔵 Mavi: bekleniyor / yazıyor simülasyonu\n• 🟡 Sarı: uyarı (daha önce konuşulmuş, atlandı)\n• 🔴 Kırmızı: hata (bağlantı kesildi)\n\nLoglara tıklayarak detayları inceleyebilirsin.',
+    tags: ['Gerçek Zamanlı', 'Detaylı Log', 'Hata Takibi']
+  },
+  warmup: {
+    icon: '💪',
+    title: 'Hesap Güçlendirme',
+    body: 'Yeni hesapları devreye almadan önce WhatsApp\'ın güven eşiğini organik şekilde aş. Hesaplar kendi aralarında gerçekçi çok turlu konuşmalar yaparak "yeni hesap" damgasından kurtulur.\n\n• Konuşma başına 3–7 mesaj turu\n• Gerçekçi yazma süresi simülasyonu\n• İki hesap arasında çapraz konuşma\n• Kaç dakika çalışacağını sen belirle\n• Warm-up biterken otomatik durur\n\nPro plan ve üzeri gerektirir.',
+    tags: ['Warm-up', 'Çok Turlu', 'Zamanlı', 'Pro+']
+  },
+  greet: {
+    icon: '👋',
+    title: 'Selam & Yemleme Modu',
+    body: 'Şablon göndermeden önce bir selam mesajı at. Cevap veren kişilere şablonu ilet, vermeyenleri atla — böylece sadece ilgili kişilere ulaşırsın.\n\n• Adım 1: Selamlama mesajı gönder\n• Adım 2: X dakika içinde cevap beklenir\n• Adım 3: Cevap verdiyse → şablon iletilir\n• Adım 4: Cevap vermediyse → otomatik atla\n\nYemleme mesajları ile sohbeti canlı tut, yanıt oranını maksimize et. Pro plan ve üzeri gerektirir.',
+    tags: ['Önce Selam', 'Akıllı Takip', 'Yemleme', 'Pro+']
+  }
+};
+
+window.openMockPopup = function(id) {
+  var data = MOCK_POPUPS[id];
+  if (!data) return;
+  document.getElementById('mock-popup-icon').textContent = data.icon;
+  document.getElementById('mock-popup-title').textContent = data.title;
+  document.getElementById('mock-popup-body').textContent = data.body;
+  var tagsEl = document.getElementById('mock-popup-tags');
+  tagsEl.innerHTML = data.tags.map(function(t) {
+    return '<span class="mock-popup-tag">' + t + '</span>';
+  }).join('');
+  var popup = document.getElementById('mock-popup');
+  popup.style.display = 'flex';
+};
+
+window.closeMockPopup = function() {
+  document.getElementById('mock-popup').style.display = 'none';
+};
+
+// Close popup when clicking the overlay background
+document.getElementById('mock-popup').addEventListener('click', function(e) {
+  if (e.target === this) closeMockPopup();
+});
 </script>
 </body>
 </html>
