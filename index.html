@@ -1122,6 +1122,15 @@
 <div class="dash-overlay" id="dash-overlay">
   <div class="dash-box">
     <button class="dash-close" onclick="closeDash()">×</button>
+    <!-- E-posta doğrulama uyarısı -->
+    <div id="verify-banner" style="display:none;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);
+      border-radius:12px;padding:12px 16px;margin-bottom:18px;font-size:13px;color:#fbbf24;line-height:1.5;">
+      ⚠️ E-posta adresin henüz doğrulanmadı.
+      <br><span style="color:#9090b0">Gelen kutunu kontrol et.</span>
+      <button onclick="resendVerification()" style="background:none;border:none;color:#fbbf24;
+        font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;padding:0;
+        text-decoration:underline;margin-left:6px;">Tekrar gönder</button>
+    </div>
     <div class="dash-header">
       <div class="dash-avatar" id="dash-avatar">S</div>
       <div>
@@ -1190,7 +1199,7 @@
 <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail, sendEmailVerification } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
   import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
   // ── BURAYA KENDİ FIREBASE CONFIG'İNİ YAZ ──
@@ -1253,7 +1262,12 @@
         uid: cred.user.uid, email, plan: 'trial', createdAt, expiresAt
       });
 
+      // E-posta doğrulama maili gönder
+      await sendEmailVerification(cred.user);
+
       closeAuth();
+      // Doğrulama bildirimi göster
+      showVerifyNotice(email);
       openDash();
     } catch(e) {
       showErr(firebaseErrMsg(e.code));
@@ -1295,9 +1309,13 @@
     document.getElementById('auth-err').classList.remove('show');
 
     try {
-      await signInWithEmailAndPassword(auth, email, pass);
+      const cred = await signInWithEmailAndPassword(auth, email, pass);
       closeAuth();
       openDash();
+      // E-posta doğrulanmamışsa uyarı göster
+      if (!cred.user.emailVerified) {
+        showVerifyBanner(cred.user);
+      }
     } catch(e) {
       showErr(firebaseErrMsg(e.code));
     } finally {
@@ -1366,6 +1384,37 @@
     const el = document.getElementById('auth-err');
     el.textContent = msg; el.classList.add('show');
   }
+
+  // Kayıt sonrası bildirim — doğrulama maili gönderildi
+  function showVerifyNotice(email) {
+    const banner = document.getElementById('verify-banner');
+    if (banner) {
+      banner.innerHTML = `📧 <strong style="color:#fbbf24">${email}</strong> adresine doğrulama maili gönderildi. Gelen kutunu kontrol et.<br>
+        <span style="color:#9090b0;font-size:12px;">Lisansını ve indirme butonunu görmek için sayfayı yenilemen yeterli.</span>`;
+      banner.style.display = 'block';
+    }
+  }
+
+  // Giriş sonrası banner — doğrulanmamış hesap
+  function showVerifyBanner(user) {
+    const banner = document.getElementById('verify-banner');
+    if (!banner) return;
+    banner.style.display = 'block';
+    // Tekrar gönder butonuna kullanıcıyı bağla
+    window._unverifiedUser = user;
+  }
+
+  window.resendVerification = async function() {
+    const user = auth.currentUser || window._unverifiedUser;
+    if (!user) return;
+    try {
+      await sendEmailVerification(user);
+      const banner = document.getElementById('verify-banner');
+      if (banner) banner.innerHTML = '✅ Doğrulama maili tekrar gönderildi. Gelen kutunu kontrol et.';
+    } catch(e) {
+      alert('Gönderim başarısız: ' + e.message);
+    }
+  };
 
   function firebaseErrMsg(code) {
     const map = {
