@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sendigo — Çoklu WhatsApp Yönetim Platformu</title>
-  <meta name="description" content="Birden fazla WhatsApp hesabını tek ekrandan yönet. Kampanya, anti-ban koruması, proxy desteği, AI destekli mesajlaşma ve çok daha fazlası." />
+  <meta name="description" content="Birden fazla WhatsApp hesabını tek ekrandan yönet. Kampanya, anti-ban koruması, konut IP (residential proxy) desteği, AI destekli mesajlaşma ve çok daha fazlası." />
   <meta property="og:title" content="Sendigo — Çoklu WhatsApp Yönetim Platformu" />
   <meta property="og:description" content="Ban yemeden toplu mesaj gönder. Gelişmiş anti-ban teknolojisi ile güvende kal." />
   <meta property="og:url" content="https://sendigo.pro" />
@@ -715,7 +715,7 @@
 
   <h1>Tüm WhatsApp Hesaplarını<br/><span class="grad-text">Tek Ekrandan Yönet</span></h1>
 
-  <p>WhatsApp Business ve kişisel hesaplarını aynı anda yönet. Kampanya gönder, hesapları güçlendir, AI ile mesaj yaz, proxy ile gizlen — gelişmiş anti-ban teknolojisiyle güvende kal.</p>
+  <p>WhatsApp Business ve kişisel hesaplarını aynı anda yönet. Kampanya gönder, hesapları güçlendir, AI ile mesaj yaz, konut IP ile gizlen — gelişmiş anti-ban teknolojisiyle güvende kal.</p>
 
   <div class="hero-btns">
     <a href="#pricing" class="btn-primary">🚀 Ücretsiz Dene</a>
@@ -1074,10 +1074,10 @@
     </div>
 
     <div class="feat-card">
-      <div class="feat-icon" style="background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3)">🌐</div>
-      <h3>Proxy Desteği</h3>
-      <p>Her hesaba ayrı proxy ata. HTTP ve SOCKS5 formatlarını destekler. Otomatik rotasyon ile IP tespitini engelle. Farklı şehir veya ülkelerden bağlantı kur.</p>
-      <div class="feat-tags"><span class="feat-tag">HTTP</span><span class="feat-tag">SOCKS5</span><span class="feat-tag">Oto Rotasyon</span></div>
+      <div class="feat-icon" style="background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3)">🏠</div>
+      <h3>Konut IP Desteği</h3>
+      <p>Her hesaba farklı konut IP (residential proxy) ata. Smartproxy, Bright Data, Oxylabs gibi sağlayıcıları destekler. Round-robin rotasyon ile her kampanyada farklı IP kullanılır.</p>
+      <div class="feat-tags"><span class="feat-tag">Residential</span><span class="feat-tag">SOCKS5</span><span class="feat-tag">Round-Robin</span></div>
     </div>
 
     <div class="feat-card">
@@ -1155,10 +1155,10 @@
           </div>
         </div>
         <div class="ab-item">
-          <div class="ab-icon">🌐</div>
+          <div class="ab-icon">🏠</div>
           <div>
-            <h4>WebRTC IP Sızıntısı Engelleme</h4>
-            <p>Proxy kullanırken bile WebRTC üzerinden gerçek IP'nin ifşa olmasını engeller. Her hesabın ağ kimliği tamamen izole edilir.</p>
+            <h4>Konut IP + WebRTC Koruma</h4>
+            <p>Her hesaba farklı konut IP (residential proxy) atanır. Konut IP kullanırken bile WebRTC üzerinden gerçek IP ifşa olmaz — her hesabın ağ kimliği tamamen izole edilir.</p>
           </div>
         </div>
         <div class="ab-item">
@@ -1241,7 +1241,7 @@
         <li>Kampanya yöneticisi</li>
         <li>Şablon editörü</li>
         <li>Temel istatistikler</li>
-        <li>Proxy desteği</li>
+        <li>Konut IP desteği</li>
         <li>Kara liste & tekrar koruması</li>
         <li class="cross">Hesap güçlendirme</li>
         <li class="cross">Selam & Yemleme modu</li>
@@ -1262,7 +1262,7 @@
         <li>Kampanya yöneticisi</li>
         <li>Şablon editörü</li>
         <li>Detaylı istatistikler & raporlar</li>
-        <li>Proxy desteği + otomatik rotasyon</li>
+        <li>Konut IP desteği + round-robin rotasyon</li>
         <li>Hesap güçlendirme</li>
         <li>Selam & Yemleme modu</li>
         <li class="cross">AI şablon üretimi (OpenAI/Claude)</li>
@@ -1282,7 +1282,7 @@
         <li>Kampanya yöneticisi</li>
         <li>Şablon editörü</li>
         <li>Detaylı istatistikler & raporlar</li>
-        <li>Proxy desteği + otomatik rotasyon</li>
+        <li>Konut IP desteği + round-robin rotasyon</li>
         <li>Hesap güçlendirme</li>
         <li>Selam & Yemleme modu</li>
         <li>AI şablon üretimi (OpenAI/Claude)</li>
@@ -1332,8 +1332,8 @@
       <div class="faq-a">Klasik WhatsApp Web QR kodu yöntemiyle bağlanırsın. Telefonunda WhatsApp → Ayarlar → Bağlı Cihazlar → Cihaz Ekle yolunu izleyerek QR'ı tara, bağlantı saniyeler içinde kurulur.</div>
     </div>
     <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">Proxy olmadan kullanabilir miyim?<span class="faq-arrow">+</span></button>
-      <div class="faq-a">Evet, proxy zorunlu değildir. Ancak birden fazla hesap kullanıyorsan her hesaba farklı bir proxy atamanı öneririz. Bu, WhatsApp'ın IP bazlı tespitini engeller ve hesapların birbirleriyle ilişkilendirilmesini önler.</div>
+      <button class="faq-q" onclick="toggleFaq(this)">Konut IP olmadan kullanabilir miyim?<span class="faq-arrow">+</span></button>
+      <div class="faq-a">Evet, konut IP zorunlu değildir. Ancak birden fazla hesap kullanıyorsan her hesaba farklı bir konut IP atamanı öneririz. Gerçek ev bağlantılarından gelen IP'ler WhatsApp'ın cluster tespitini çok daha güçlü engeller ve hesapların birbirleriyle ilişkilendirilmesini önler.</div>
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">Ödeme yaptıktan sonra lisansımı nasıl alırım?<span class="faq-arrow">+</span></button>
