@@ -1076,8 +1076,8 @@
     <div class="feat-card">
       <div class="feat-icon" style="background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3)">🏠</div>
       <h3>Konut IP Desteği</h3>
-      <p>Her hesaba farklı konut IP (residential proxy) ata. Smartproxy, Bright Data, Oxylabs gibi sağlayıcıları destekler. Round-robin rotasyon ile her kampanyada farklı IP kullanılır.</p>
-      <div class="feat-tags"><span class="feat-tag">Residential</span><span class="feat-tag">SOCKS5</span><span class="feat-tag">Round-Robin</span></div>
+      <p>Her hesaba farklı konut IP (residential proxy) ata. Proxy-Seller, Smartproxy, Bright Data gibi sağlayıcıları destekler. SOCKS5 için <code style="font-size:11px;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;">socks5://kullanici:sifre@ip:port</code> formatını kullan. Round-robin rotasyon ile her kampanyada farklı IP kullanılır.</p>
+      <div class="feat-tags"><span class="feat-tag">Residential</span><span class="feat-tag">SOCKS5</span><span class="feat-tag">HTTP</span><span class="feat-tag">Round-Robin</span></div>
     </div>
 
     <div class="feat-card">
@@ -1137,7 +1137,7 @@
           <div class="ab-icon">🔍</div>
           <div>
             <h4>Cihaz Parmak İzi Maskeleme</h4>
-            <p>Her hesap benzersiz ekran çözünürlüğü, donanım profili, tarayıcı kimliği ve Chrome 120–125 User-Agent Rotasyonu ile çalışır. WhatsApp aynı makineden gelen farklı hesapları birbirinden ayırt edemez.</p>
+            <p>Her hesap benzersiz ekran çözünürlüğü, donanım profili ve tarayıcı kimliğiyle çalışır. Chrome 141–148 ve Firefox 147–148 arasında seçilen UA'ya göre tüm parmak izi sinyalleri (Client Hints, WebGL renderer, oscpu, vendor, productSub) otomatik olarak tutarlı ayarlanır. WhatsApp aynı makinedeki hesapları birbirinden ayırt edemez.</p>
           </div>
         </div>
         <div class="ab-item">
@@ -1185,8 +1185,8 @@
         <div class="ab-item">
           <div class="ab-icon">🔀</div>
           <div>
-            <h4>User-Agent Rotasyonu</h4>
-            <p>Chrome 120–125 aralığında gerçekçi minor sürümler (7 farklı UA) hesap başına kalıcı olarak atanır. Aynı makinedeki hesaplar farklı tarayıcı örnekleri gibi görünür.</p>
+            <h4>Çift Tarayıcı UA Rotasyonu</h4>
+            <p>Chrome 141–148 ve Firefox 147–148'i kapsayan 10 farklı UA, hesap başına kalıcı olarak atanır. Chrome hesaplarında Sec-Ch-Ua Client Hints dinamik oluşturulur; Firefox hesaplarında bu başlıklar tamamen kaldırılır — her hesap gerçek bir farklı tarayıcı gibi görünür.</p>
           </div>
         </div>
         <div class="ab-item">
@@ -1209,7 +1209,8 @@
       <div class="ab-stat-row"><span class="ab-stat-label">Status + Presence simülasyonu</span><span class="ab-stat-val blue">Çalışıyor</span></div>
       <div class="ab-stat-row"><span class="ab-stat-label">Kampanya içi ısınma</span><span class="ab-stat-val blue">Aktif</span></div>
       <div class="ab-stat-row"><span class="ab-stat-label">İlgilenmiyorum opt-out tespiti</span><span class="ab-stat-val">Aktif</span></div>
-      <div class="ab-stat-row"><span class="ab-stat-label">User-Agent rotasyonu</span><span class="ab-stat-val blue">Aktif</span></div>
+      <div class="ab-stat-row"><span class="ab-stat-label">Chrome 141-148 + Firefox 147-148 UA</span><span class="ab-stat-val blue">Aktif</span></div>
+      <div class="ab-stat-row"><span class="ab-stat-label">Client Hints / oscpu tutarlılığı</span><span class="ab-stat-val">Engellendi</span></div>
       <div class="ab-stat-row"><span class="ab-stat-label">Kademeli hesap başlatma</span><span class="ab-stat-val blue">Aktif</span></div>
       <div class="ab-stat-row"><span class="ab-stat-label">Genel ban riski</span><span class="ab-stat-val purple">Minimum</span></div>
     </div>
@@ -1313,7 +1314,7 @@
   <div class="faq-wrap">
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">Sendigo kullanmak hesabımı banlattırır mı?<span class="faq-arrow">+</span></button>
-      <div class="faq-a">Sendigo, özellikle ban önleme üzerine tasarlanmıştır. 7 katmanlı güvenlik sistemi — cihaz parmak izi maskeleme, insan benzeri zamanlama, presence simülasyonu, WebRTC koruması ve erken uyarı sistemi — sayesinde WhatsApp'ın bot tespit mekanizmalarını geçer. Önerilen günlük limitlere uyulduğunda ban riski son derece düşüktür.</div>
+      <div class="faq-a">Sendigo, özellikle ban önleme üzerine tasarlanmıştır. Çok katmanlı güvenlik sistemi — güncel Chrome 141–148 + Firefox 147–148 UA rotasyonu, Client Hints tutarlılığı, cihaz parmak izi maskeleme, insan benzeri Gaussian zamanlama, presence simülasyonu, WebRTC koruması ve erken uyarı sistemi — sayesinde WhatsApp'ın bot tespit mekanizmalarını geçer. Önerilen günlük limitlere uyulduğunda ban riski son derece düşüktür.</div>
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">WhatsApp Business olmayan normal hesaplar da çalışır mı?<span class="faq-arrow">+</span></button>
@@ -1334,6 +1335,10 @@
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">Konut IP olmadan kullanabilir miyim?<span class="faq-arrow">+</span></button>
       <div class="faq-a">Evet, konut IP zorunlu değildir. Ancak birden fazla hesap kullanıyorsan her hesaba farklı bir konut IP atamanı öneririz. Gerçek ev bağlantılarından gelen IP'ler WhatsApp'ın cluster tespitini çok daha güçlü engeller ve hesapların birbirleriyle ilişkilendirilmesini önler.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">SOCKS5 proxy formatı nasıl girilmeli?<span class="faq-arrow">+</span></button>
+      <div class="faq-a">SOCKS5 proxy kullanıyorsan prefix zorunludur: <strong>socks5://kullanici:sifre@ip:port</strong> formatını kullan. Prefix olmadan girilirse sistem proxy'yi HTTP olarak işler — bu durumda gerçek IP sızabilir ve hesap ban yiyebilir. HTTP proxy için prefix gerekmez ya da <strong>http://</strong> ile başlayabilirsin. Türkiye lokasyonlu konut IP için Proxy-Seller platformunu öneririz.</div>
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">Ödeme yaptıktan sonra lisansımı nasıl alırım?<span class="faq-arrow">+</span></button>
