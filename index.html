@@ -666,21 +666,188 @@
     .preview-hint span { animation: bounce 2s infinite; display:inline-block; }
     @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
 
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 6px; background: none; border: none;
+      flex-shrink: 0;
+    }
+    .hamburger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--text); border-radius: 2px;
+      transition: transform .25s, opacity .25s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile nav drawer */
+    .mobile-nav-drawer {
+      display: none; position: fixed;
+      top: 68px; left: 0; right: 0;
+      background: rgba(8,8,18,0.98);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border2);
+      z-index: 99; padding: 16px 5% 28px;
+      flex-direction: column; gap: 0;
+      overflow-y: auto; max-height: calc(100vh - 68px);
+    }
+    .mobile-nav-drawer.open { display: flex; }
+    .mobile-nav-drawer a {
+      color: var(--muted); text-decoration: none;
+      font-size: 16px; font-weight: 600;
+      padding: 15px 0; border-bottom: 1px solid var(--border);
+      display: block; transition: color .15s;
+    }
+    .mobile-nav-drawer a:hover { color: var(--text); }
+    .mobile-nav-drawer a:last-of-type { border-bottom: none; }
+    .mobile-nav-drawer .mnav-cta {
+      display: block; text-align: center;
+      background: var(--grad); color: #fff !important;
+      -webkit-text-fill-color: #fff !important;
+      padding: 14px; border-radius: 12px;
+      margin-top: 16px; font-size: 16px; font-weight: 700;
+      border-bottom: none !important;
+    }
+    .mobile-nav-drawer .mnav-auth {
+      display: block; text-align: center;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border2);
+      color: var(--text); padding: 13px; border-radius: 12px;
+      font-size: 15px; font-weight: 600; cursor: pointer;
+      font-family: inherit; margin-top: 8px;
+    }
+
+    /* Logo gap fix — spans are separate flex items in gap:10px container */
+    .nav-logo .logo-dot { margin-left: -9px; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .antiban-wrap { grid-template-columns: 1fr; }
       .antiban-visual { display: none; }
-      .pricing-grid { grid-template-columns: 1fr; max-width: 420px; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
       .nav-links { display: none; }
-      .preview-mockup { height: 340px; }
-      .mock-sidebar { width: 160px; }
+      .hamburger { display: flex; }
+      .preview-mockup { height: 360px; }
+      .mock-sidebar { width: 180px; }
+      .auth-box { padding: 32px 24px; max-width: calc(100vw - 32px); }
+      .dash-box { padding: 32px 24px; max-width: calc(100vw - 32px); }
     }
+
     @media (max-width: 600px) {
       section { padding: 70px 5%; }
-      .hero { padding: 100px 5% 60px; }
-      .hero-stats { gap: 28px; }
-      .preview-mockup { flex-direction: column; height: auto; }
-      .mock-sidebar { width: 100%; height: 120px; }
+      .hero { padding: 96px 5% 56px; }
+
+      /* Preview mockup: hide sidebar, phone-friendly */
+      .preview-mockup { flex-direction: column; height: auto; min-height: 380px; }
+      .mock-sidebar { display: none; }
+      .mock-main { padding: 44px 14px 14px; gap: 10px; }
+
+      /* Stats: 2×2 grid */
+      .hero-stats {
+        display: grid; grid-template-columns: 1fr 1fr;
+        gap: 20px 32px; padding-top: 36px; margin-top: 48px;
+      }
+      .stat-num { font-size: 28px; }
+
+      /* Features: single column */
+      .features-grid { grid-template-columns: 1fr; }
+      .feat-card { padding: 24px 20px; }
+
+      /* Pricing */
+      .pricing-grid { max-width: 100%; }
+      .price-card { padding: 28px 20px; }
+
+      /* CTA */
+      .cta-inner { padding: 40px 22px; }
+      .cta-inner .btn-primary { font-size: 16px; padding: 15px 28px; }
+
+      /* Modals — bottom sheet style */
+      .auth-overlay, .dash-overlay { align-items: flex-end; }
+      .auth-box, .dash-box {
+        border-radius: 24px 24px 0 0; border-bottom: none;
+        max-width: 100%; margin: 0; padding: 28px 20px 40px;
+        box-shadow: 0 -20px 60px rgba(0,0,0,0.5);
+      }
+
+      /* Footer */
+      .footer-top { flex-direction: column; gap: 28px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
+
+      /* Buttons */
+      .hero-btns { gap: 10px; }
+      .btn-primary, .btn-secondary { font-size: 15px; padding: 13px 22px; }
+      .btn-primary { box-shadow: 0 0 28px rgba(124,58,237,0.3); }
+    }
+
+    @media (max-width: 480px) {
+      nav { padding: 0 4%; height: 60px; }
+      .mobile-nav-drawer { top: 60px; }
+      section { padding: 60px 4%; }
+      .hero { padding: 84px 4% 48px; }
+      .hero h1 { font-size: 30px; letter-spacing: -1.2px; }
+      .hero p { font-size: 15px; margin: 16px auto 28px; }
+      .badge { font-size: 12px; padding: 5px 12px; line-height: 1.5; }
+
+      .section-title { font-size: 24px; letter-spacing: -.5px; }
+      .section-sub { font-size: 15px; }
+      .section-head { margin-bottom: 40px; }
+
+      /* Mock cards */
+      .mock-row { gap: 8px; }
+      .mock-card { padding: 10px 10px; }
+      .mock-card-val { font-size: 17px; }
+      .mock-panel-title { font-size: 13px; }
+      .mock-btns .mock-btn { font-size: 9px; padding: 6px 10px; }
+
+      /* Pricing */
+      .plan-price { font-size: 38px; }
+      .plan-features li { font-size: 13px; }
+
+      /* CTA */
+      .cta-inner { padding: 30px 16px; border-radius: 20px; }
+      .cta-inner h2 { font-size: 22px; }
+      .cta-inner p { font-size: 14px; margin-bottom: 24px; }
+      .cta-inner .btn-primary { font-size: 15px; padding: 14px 24px; display: flex; width: 100%; justify-content: center; }
+
+      /* FAQ */
+      .faq-q { padding: 16px; font-size: 13px; }
+      .faq-item.open .faq-a { padding: 0 16px 16px; }
+
+      /* Footer */
+      footer { padding: 48px 4% 28px; }
+      .footer-brand p { max-width: 100%; }
+
+      /* Anti-ban items */
+      .ab-item { padding: 14px 14px; gap: 10px; }
+      .ab-item h4 { font-size: 13px; }
+      .ab-item p { font-size: 12px; }
+      .ab-icon { width: 32px; height: 32px; font-size: 15px; }
+
+      /* Feature cards */
+      .feat-card h3 { font-size: 16px; }
+      .feat-card p { font-size: 13px; }
+
+      /* Auth / Dash */
+      .auth-box, .dash-box { padding: 24px 16px 36px; }
+      .auth-submit { font-size: 14px; padding: 12px; }
+      .dash-dl-btn { font-size: 14px; padding: 13px; }
+    }
+
+    @media (max-width: 390px) {
+      .hero h1 { font-size: 26px; }
+      .hero-btns { flex-direction: column; align-items: stretch; }
+      .hero-btns .btn-primary, .hero-btns .btn-secondary { justify-content: center; text-align: center; }
+      .stat-num { font-size: 24px; }
+      .stat-label { font-size: 11px; }
+
+      /* Mock row: stack cards vertically on tiny screens */
+      .mock-row { flex-direction: column; }
+      .mock-card { flex: none; }
+
+      .plan-price { font-size: 34px; }
+      .pricing-toggle { gap: 10px; }
+      .toggle-label { font-size: 13px; }
     }
   </style>
 </head>
@@ -701,7 +868,21 @@
     <a href="#pricing" class="nav-cta">Hemen Başla</a>
     <button class="nav-auth-btn" id="nav-login-btn" onclick="openAuth('login')">Giriş Yap</button>
   </div>
+  <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menü">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE NAV DRAWER -->
+<div class="mobile-nav-drawer" id="mobile-drawer">
+  <a href="#preview"  onclick="closeMobileNav()">Önizleme</a>
+  <a href="#features" onclick="closeMobileNav()">Özellikler</a>
+  <a href="#antiban"  onclick="closeMobileNav()">Anti-Ban</a>
+  <a href="#pricing"  onclick="closeMobileNav()">Fiyatlar</a>
+  <a href="#sss"      onclick="closeMobileNav()">SSS</a>
+  <a href="#pricing"  class="mnav-cta" onclick="closeMobileNav()">🚀 Hemen Başla</a>
+  <button class="mnav-auth" id="mnav-login-btn" onclick="closeMobileNav(); openAuth('login')">Giriş Yap</button>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -797,7 +978,7 @@
           <div class="mock-avatar" style="background:rgba(251,191,36,0.15);color:#fbbf24;">P</div>
           <div class="mock-acct-info">
             <div class="mock-acct-name">Pazarlama</div>
-            <div class="mock-acct-status">👋 Selam modu</div>
+            <div class="mock-acct-status">💪 Güçlendirme</div>
           </div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
             <div class="mock-acct-badge" style="background:rgba(251,191,36,0.1);color:#fbbf24;">94/200</div>
@@ -808,7 +989,6 @@
         <div class="mock-sb-nav" style="flex-wrap:wrap;gap:3px;padding:6px;">
           <div class="mock-nav-btn active" id="mock-tab-0" onclick="switchMockTab(0)" style="font-size:8px;">📋 Kampanya</div>
           <div class="mock-nav-btn" id="mock-tab-1" onclick="switchMockTab(1)" style="font-size:8px;">💪 Güçlen.</div>
-          <div class="mock-nav-btn" id="mock-tab-2" onclick="switchMockTab(2)" style="font-size:8px;">👋 Selam</div>
           <div class="mock-nav-btn" id="mock-tab-3" onclick="switchMockTab(3)" style="font-size:8px;">✨ AI</div>
           <div class="mock-nav-btn" id="mock-tab-4" onclick="switchMockTab(4)" style="font-size:8px;">🛡️ Güvenlik</div>
           <div class="mock-nav-btn" id="mock-tab-5" onclick="switchMockTab(5)" style="font-size:8px;">📈 İstatistik</div>
@@ -902,48 +1082,6 @@
         </div>
       </div>
 
-      <!-- Panel 2: Selam -->
-      <div class="mock-main mock-panel" id="mock-panel-2" style="display:none">
-        <div>
-          <div class="mock-panel-title">👋 Selam &amp; Yemleme Modu</div>
-          <div class="mock-panel-sub">Pazarlama — 94 kişi bekliyor</div>
-        </div>
-        <div class="mock-row">
-          <div class="mock-card mock-clickable" onclick="openMockPopup('greet')">
-            <div class="mock-card-label">Selamlanan</div>
-            <div class="mock-card-val green">42</div>
-            <div class="mock-card-hint">↗ detay</div>
-          </div>
-          <div class="mock-card mock-clickable" onclick="openMockPopup('greet')">
-            <div class="mock-card-label">Yanıt Oranı</div>
-            <div class="mock-card-val purple">%61</div>
-            <div class="mock-card-hint">↗ detay</div>
-          </div>
-          <div class="mock-card mock-clickable" onclick="openMockPopup('greet')">
-            <div class="mock-card-label">Şablon Gönder.</div>
-            <div class="mock-card-val" style="color:#fbbf24;">18</div>
-            <div class="mock-card-hint">↗ detay</div>
-          </div>
-        </div>
-        <div class="mock-log mock-clickable" onclick="openMockPopup('greet')">
-          <div class="mock-log-title">Selam Akışı <span style="float:right;opacity:.5;font-size:8px">↗ tıkla</span></div>
-          <div class="mock-log-line"><div class="mock-log-dot sent"></div><span class="mock-log-text">👋 +90 532 *** *291'e selam gönderildi</span></div>
-          <div class="mock-log-line"><div class="mock-log-dot" style="background:#a78bfa"></div><span class="mock-log-text">💬 Cevap aldı → Şablon sırasına alındı</span></div>
-          <div class="mock-log-line"><div class="mock-log-dot wait"></div><span class="mock-log-text">⏳ +90 542 *** *774 cevap bekleniyor…</span></div>
-          <div class="mock-log-line"><div class="mock-log-dot sent"></div><span class="mock-log-text">📤 +90 505 *** *033'e şablon iletildi</span></div>
-          <div class="mock-log-line"><div class="mock-log-dot warn"></div><span class="mock-log-text">⏭ +90 533 *** *819 cevap vermedi, atlandı</span></div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-          <div class="mock-status-row">
-            <div class="mock-status-dot" style="background:#fbbf24;box-shadow:0 0 6px #fbbf2460;animation:pulse 2s infinite"></div>
-            <span>Selam modu çalışıyor — Yanıt oranı yüksek</span>
-          </div>
-          <div class="mock-btns">
-            <div class="mock-btn secondary">⏸ Duraklat</div>
-            <div class="mock-btn primary mock-clickable" onclick="openMockPopup('greet')">ℹ Detaylar</div>
-          </div>
-        </div>
-      </div>
 
       <!-- Panel 3: AI Asistan -->
       <div class="mock-main mock-panel" id="mock-panel-3" style="display:none">
@@ -1076,16 +1214,10 @@
     <div class="feat-card">
       <div class="feat-icon" style="background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3)">🏠</div>
       <h3>Konut IP Desteği</h3>
-      <p>Her hesaba farklı konut IP (residential proxy) ata. Proxy-Seller, Smartproxy, Bright Data gibi sağlayıcıları destekler. SOCKS5 için <code style="font-size:11px;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;">socks5://kullanici:sifre@ip:port</code> formatını kullan. Round-robin rotasyon ile her kampanyada farklı IP kullanılır.</p>
-      <div class="feat-tags"><span class="feat-tag">Residential</span><span class="feat-tag">SOCKS5</span><span class="feat-tag">HTTP</span><span class="feat-tag">Round-Robin</span></div>
+      <p>Her hesaba farklı konut IP (residential proxy) ata. Proxy-Seller, Smartproxy, Bright Data gibi sağlayıcıları destekler. Round-robin rotasyon ile her kampanyada farklı IP kullanılır.</p>
+      <div class="feat-tags"><span class="feat-tag">Residential</span><span class="feat-tag">HTTP</span><span class="feat-tag">Round-Robin</span></div>
     </div>
 
-    <div class="feat-card">
-      <div class="feat-icon" style="background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3)">👋</div>
-      <h3>Selam Modu</h3>
-      <p>Şablondan önce otomatik selamlama gönder. Cevap veren kişilere şablon ilet, vermeyenleri atla. Yemleme mesajlarıyla yanıt oranını maksimize et. Zamanlanmış başlatma desteği.</p>
-      <div class="feat-tags"><span class="feat-tag">Önce Selam</span><span class="feat-tag">Yemleme</span><span class="feat-tag">Oto Takip</span><span class="feat-tag">Zamanlı</span></div>
-    </div>
 
     <div class="feat-card">
       <div class="feat-icon" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3)">✨</div>
@@ -1111,7 +1243,7 @@
     <div class="feat-card">
       <div class="feat-icon" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.25)">⏰</div>
       <h3>Zamanlı Başlatma</h3>
-      <p>Kampanya, güçlendirme veya selam modunu istediğin saatte otomatik başlat. Sabah zirve saatlerinde gönderim yap — sen uyurken Sendigo çalışır.</p>
+      <p>Kampanya veya güçlendirmeyi istediğin saatte otomatik başlat. Sabah zirve saatlerinde gönderim yap — sen uyurken Sendigo çalışır.</p>
       <div class="feat-tags"><span class="feat-tag">Otomatik</span><span class="feat-tag">Saat Ayarı</span><span class="feat-tag">3 Mod</span></div>
     </div>
 
@@ -1252,7 +1384,6 @@
         <li>Konut IP desteği</li>
         <li>Kara liste & tekrar koruması</li>
         <li class="cross">Hesap güçlendirme</li>
-        <li class="cross">Selam & Yemleme modu</li>
         <li class="cross">AI şablon üretimi</li>
         <li class="cross">Öncelikli destek</li>
       </ul>
@@ -1272,7 +1403,6 @@
         <li>Detaylı istatistikler & raporlar</li>
         <li>Konut IP desteği + round-robin rotasyon</li>
         <li>Hesap güçlendirme</li>
-        <li>Selam & Yemleme modu</li>
         <li class="cross">AI şablon üretimi (OpenAI/Claude)</li>
         <li class="cross">Zamanlı başlatma</li>
         <li class="cross">Öncelikli destek</li>
@@ -1292,7 +1422,6 @@
         <li>Detaylı istatistikler & raporlar</li>
         <li>Konut IP desteği + round-robin rotasyon</li>
         <li>Hesap güçlendirme</li>
-        <li>Selam & Yemleme modu</li>
         <li>AI şablon üretimi (OpenAI/Claude)</li>
         <li>Zamanlı başlatma</li>
         <li>Öncelikli WhatsApp desteği</li>
@@ -1329,7 +1458,7 @@
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">AI özellikleri nasıl çalışıyor?<span class="faq-arrow">+</span></button>
-      <div class="faq-a">Sendigo, OpenAI (GPT) ve Anthropic (Claude) API'larını destekler. Kendi API anahtarını girerek Selam panelinde yemleme mesajları, kampanya şablonları veya kişiselleştirilmiş içerik üretebilirsin. API anahtarın güvende tutulur, sunucularımıza gönderilmez.</div>
+      <div class="faq-a">Sendigo, OpenAI (GPT) ve Anthropic (Claude) API'larını destekler. Kendi API anahtarını girerek kampanya şablonları veya kişiselleştirilmiş içerik üretebilirsin. API anahtarın güvende tutulur, sunucularımıza gönderilmez.</div>
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">Uygulama hangi işletim sisteminde çalışıyor?<span class="faq-arrow">+</span></button>
@@ -1342,10 +1471,6 @@
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">Konut IP olmadan kullanabilir miyim?<span class="faq-arrow">+</span></button>
       <div class="faq-a">Evet, konut IP zorunlu değildir. Ancak birden fazla hesap kullanıyorsan her hesaba farklı bir konut IP atamanı öneririz. Gerçek ev bağlantılarından gelen IP'ler WhatsApp'ın cluster tespitini çok daha güçlü engeller ve hesapların birbirleriyle ilişkilendirilmesini önler.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">SOCKS5 proxy formatı nasıl girilmeli?<span class="faq-arrow">+</span></button>
-      <div class="faq-a">SOCKS5 proxy kullanıyorsan prefix zorunludur: <strong>socks5://kullanici:sifre@ip:port</strong> formatını kullan. Prefix olmadan girilirse sistem proxy'yi HTTP olarak işler — bu durumda gerçek IP sızabilir ve hesap ban yiyebilir. HTTP proxy için prefix gerekmez ya da <strong>http://</strong> ile başlayabilirsin. Türkiye lokasyonlu konut IP için Proxy-Seller platformunu öneririz.</div>
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">Ödeme yaptıktan sonra lisansımı nasıl alırım?<span class="faq-arrow">+</span></button>
@@ -1502,12 +1627,15 @@
   // Auth durumu değişince navbar güncelle
   onAuthStateChanged(auth, async user => {
     const btn = document.getElementById('nav-login-btn');
+    const mBtn = document.getElementById('mnav-login-btn');
     if (user) {
       btn.textContent = '👤 Hesabım';
       btn.onclick = openDash;
+      if (mBtn) { mBtn.textContent = '👤 Hesabım'; mBtn.onclick = () => { closeMobileNav(); openDash(); }; }
     } else {
       btn.textContent = 'Giriş Yap';
       btn.onclick = () => openAuth('login');
+      if (mBtn) { mBtn.textContent = 'Giriş Yap'; mBtn.onclick = () => { closeMobileNav(); openAuth('login'); }; }
     }
   });
 
@@ -1845,12 +1973,6 @@ var MOCK_POPUPS = {
     title: 'Hesap Güçlendirme',
     body: 'Yeni hesapları devreye almadan önce WhatsApp\'ın güven eşiğini organik şekilde aş. Hesaplar kendi aralarında gerçekçi çok turlu konuşmalar yaparak "yeni hesap" damgasından kurtulur.\n\n• Konuşma başına 3–7 mesaj turu\n• Gerçekçi yazma süresi simülasyonu\n• İki hesap arasında çapraz konuşma\n• Kaç dakika çalışacağını sen belirle\n• Warm-up biterken otomatik durur\n\nPro plan ve üzeri gerektirir.',
     tags: ['Warm-up', 'Çok Turlu', 'Zamanlı', 'Pro+']
-  },
-  greet: {
-    icon: '👋',
-    title: 'Selam & Yemleme Modu',
-    body: 'Şablon göndermeden önce bir selam mesajı at. Cevap veren kişilere şablonu ilet, vermeyenleri atla — böylece sadece ilgili kişilere ulaşırsın.\n\n• Adım 1: Selamlama mesajı gönder\n• Adım 2: X dakika içinde cevap beklenir\n• Adım 3: Cevap verdiyse → şablon iletilir\n• Adım 4: Cevap vermediyse → otomatik atla\n\nYemleme mesajları ile sohbeti canlı tut, yanıt oranını maksimize et. Pro plan ve üzeri gerektirir.',
-    tags: ['Önce Selam', 'Akıllı Takip', 'Yemleme', 'Pro+']
   }
 };
 
@@ -1875,6 +1997,40 @@ window.closeMockPopup = function() {
 // Close popup when clicking the overlay background
 document.getElementById('mock-popup').addEventListener('click', function(e) {
   if (e.target === this) closeMockPopup();
+});
+</script>
+
+<script>
+/* ── MOBILE NAV ── */
+window.toggleMobileNav = function() {
+  const drawer = document.getElementById('mobile-drawer');
+  const burger = document.getElementById('hamburger');
+  const isOpen = drawer.classList.toggle('open');
+  burger.classList.toggle('open', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+};
+window.closeMobileNav = function() {
+  document.getElementById('mobile-drawer').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+  document.body.style.overflow = '';
+};
+// Also update mobile auth button state when auth state changes
+(function() {
+  var _origAuth = window.openAuth;
+  window.openAuth = function(tab) {
+    closeMobileNav();
+    _origAuth && _origAuth(tab);
+  };
+})();
+// Close on outside tap
+document.addEventListener('click', function(e) {
+  const drawer = document.getElementById('mobile-drawer');
+  const burger = document.getElementById('hamburger');
+  if (drawer && drawer.classList.contains('open')) {
+    if (!drawer.contains(e.target) && !burger.contains(e.target)) {
+      closeMobileNav();
+    }
+  }
 });
 </script>
 </body>
