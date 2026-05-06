@@ -926,7 +926,7 @@
         <div class="mock-dot red"></div>
         <div class="mock-dot yellow"></div>
         <div class="mock-dot green"></div>
-        <span class="mock-titlebar-title">Sendigo v5.4.0</span>
+        <span class="mock-titlebar-title">Sendigo v5.7.2</span>
       </div>
 
       <!-- Sidebar -->
@@ -992,6 +992,7 @@
           <div class="mock-nav-btn" id="mock-tab-3" onclick="switchMockTab(3)" style="font-size:8px;">✨ AI</div>
           <div class="mock-nav-btn" id="mock-tab-4" onclick="switchMockTab(4)" style="font-size:8px;">🛡️ Güvenlik</div>
           <div class="mock-nav-btn" id="mock-tab-5" onclick="switchMockTab(5)" style="font-size:8px;">📈 İstatistik</div>
+          <div class="mock-nav-btn" id="mock-tab-6" onclick="switchMockTab(6)" style="font-size:8px;">⚡ Anlık</div>
         </div>
       </div>
 
@@ -1127,7 +1128,7 @@
               <span style="font-size:9px;font-weight:700;color:#4ade80;">✓ Aktif</span>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
-              <span style="font-size:9px;color:var(--muted);">Gece Modu (23:00–07:00)</span>
+              <span style="font-size:9px;color:var(--muted);">Gece Modu (23:00–07:30)</span>
               <span style="font-size:9px;font-weight:700;color:#4ade80;">✓ Aktif</span>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;">
@@ -1169,6 +1170,48 @@
           <div class="mock-log-line"><div class="mock-log-dot" style="background:#25d366"></div><span class="mock-log-text">Destek Hattı — 54/120 mesaj — %45</span></div>
           <div class="mock-log-line"><div class="mock-log-dot" style="background:#fbbf24"></div><span class="mock-log-text">Pazarlama — 94/200 mesaj — %47</span></div>
           <div class="mock-log-line" style="border:none;margin-top:4px;"><span class="mock-log-text" style="color:#4ade80;">Toplam: 247 mesaj — 0 ban riski</span></div>
+        </div>
+      </div>
+
+      <!-- Panel 6: Anlık Atış -->
+      <div class="mock-main mock-panel" id="mock-panel-6" style="display:none">
+        <div>
+          <div class="mock-panel-title">⚡ Anlık Mesaj Atışı</div>
+          <div class="mock-panel-sub">Tüm hesaplar — Paralel gönderim aktif</div>
+        </div>
+        <div class="mock-row">
+          <div class="mock-card">
+            <div class="mock-card-label">Gönderilen</div>
+            <div class="mock-card-val green">42</div>
+            <div class="mock-card-hint">Bu oturumda</div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-label">Süre</div>
+            <div class="mock-card-val purple">5 dk</div>
+            <div class="mock-card-hint">Aralık: 10 sn</div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-label">Hesap</div>
+            <div class="mock-card-val" style="color:#06b6d4;">4 aktif</div>
+            <div class="mock-card-hint">Paralel</div>
+          </div>
+        </div>
+        <div class="mock-log">
+          <div class="mock-log-title">Atış Logu</div>
+          <div class="mock-log-line"><div class="mock-log-dot sent"></div><span class="mock-log-text">⚡ [Satış] → +90 532 *** *291 — 10/xx</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot sent"></div><span class="mock-log-text">⚡ [Pazarlama] → +90 542 *** *774 — 10/xx</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot wait"></div><span class="mock-log-text">⏳ Sonraki atış: 8 sn…</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot sent"></div><span class="mock-log-text">⚡ [Destek] → +90 533 *** *819 — 11/xx</span></div>
+          <div class="mock-log-line"><div class="mock-log-dot" style="background:#4ade80"></div><span class="mock-log-text">✅ Oturum devam ediyor — 4:22 kaldı</span></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div class="mock-status-row">
+            <div class="mock-status-dot" style="background:#f59e0b;box-shadow:0 0 6px #f59e0b60;animation:pulse 2s infinite"></div>
+            <span>Anlık atış aktif — tüm hesaplar paralel çalışıyor</span>
+          </div>
+          <div class="mock-btns">
+            <div class="mock-btn secondary" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.4);color:#f87171;">⏹ Durdur</div>
+          </div>
         </div>
       </div>
 
@@ -1229,8 +1272,8 @@
     <div class="feat-card">
       <div class="feat-icon" style="background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.25)">⌨️</div>
       <h3>Akıllı Yazma Hızı</h3>
-      <p>5 farklı yazma hızı profili: çok yavaş'tan çok hızlı'ya. Karakter başına gerçekçi gecikme ile insan davranışını mükemmel taklit eder.</p>
-      <div class="feat-tags"><span class="feat-tag">5 Profil</span><span class="feat-tag">İnsan Simülasyonu</span></div>
+      <p>6 kademeli yazma hızı profili: çok yavaş'tan çok hızlı'ya. Karakter başına gerçekçi gecikme ile insan davranışını mükemmel taklit eder.</p>
+      <div class="feat-tags"><span class="feat-tag">6 Kademe</span><span class="feat-tag">İnsan Simülasyonu</span></div>
     </div>
 
     <div class="feat-card">
@@ -1250,8 +1293,15 @@
     <div class="feat-card">
       <div class="feat-icon" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25)">🛡️</div>
       <h3>Güvenlik Ayarları</h3>
-      <p>Yerleşme cooldown'u, hesap ekleme beklemesi, mevcut sohbeti atlama, gece modu (23:00–07:00) ve kampanya içi ısınma — tümü tek panelden, toggle ile kontrol edilir.</p>
+      <p>Yerleşme cooldown'u, hesap ekleme beklemesi, mevcut sohbeti atlama, gece modu (23:00–07:30) ve kampanya içi ısınma — tümü tek panelden, toggle ile kontrol edilir.</p>
       <div class="feat-tags"><span class="feat-tag">Cooldown</span><span class="feat-tag">Gece Modu</span><span class="feat-tag">İç Isınma</span><span class="feat-tag">Tek Panel</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon" style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.35)">⚡</div>
+      <h3>Anlık Mesaj Atışı</h3>
+      <p>Tüm hesaplardan aynı anda paralel mesaj gönder. Süreyi (dakika) ve aralığı (saniye) kendin belirle. Atış sırasında hesap istatistikleri ve durumu anlık güncellenir. Tek tıkla durdurulabilir.</p>
+      <div class="feat-tags"><span class="feat-tag">Paralel</span><span class="feat-tag">Ayarlanabilir Süre</span><span class="feat-tag">Anlık İstatistik</span><span class="feat-tag">Durdurulabilir</span></div>
     </div>
 
     <div class="feat-card">
@@ -1383,6 +1433,7 @@
         <li>Temel istatistikler</li>
         <li>Konut IP desteği</li>
         <li>Kara liste & tekrar koruması</li>
+        <li class="cross">Anlık Mesaj Atışı</li>
         <li class="cross">Hesap güçlendirme</li>
         <li class="cross">AI şablon üretimi</li>
         <li class="cross">Öncelikli destek</li>
@@ -1403,6 +1454,7 @@
         <li>Detaylı istatistikler & raporlar</li>
         <li>Konut IP desteği + round-robin rotasyon</li>
         <li>Hesap güçlendirme</li>
+        <li>⚡ Anlık Mesaj Atışı</li>
         <li class="cross">AI şablon üretimi (OpenAI/Claude)</li>
         <li class="cross">Zamanlı başlatma</li>
         <li class="cross">Öncelikli destek</li>
@@ -1422,6 +1474,7 @@
         <li>Detaylı istatistikler & raporlar</li>
         <li>Konut IP desteği + round-robin rotasyon</li>
         <li>Hesap güçlendirme</li>
+        <li>⚡ Anlık Mesaj Atışı</li>
         <li>AI şablon üretimi (OpenAI/Claude)</li>
         <li>Zamanlı başlatma</li>
         <li>Öncelikli WhatsApp desteği</li>
@@ -1587,7 +1640,7 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2025 Sendigo.pro — Tüm hakları saklıdır.</span>
+    <span>© 2026 Sendigo.pro — Tüm hakları saklıdır.</span>
     <div style="display:flex;gap:20px">
       <a href="privacy.html">Gizlilik Politikası</a>
       <a href="terms.html">Kullanım Koşulları</a>
@@ -1934,7 +1987,7 @@
 var _mockActiveTab = 0;
 
 window.switchMockTab = function(idx) {
-  [0,1,2,3,4,5].forEach(i => {
+  [0,1,2,3,4,5,6].forEach(i => {
     const tab = document.getElementById('mock-tab-'+i);
     if (tab) tab.classList.toggle('active', i===idx);
     const p = document.getElementById('mock-panel-'+i);
